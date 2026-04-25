@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="card p-4 shadow">
+
+<h2>📄 Resume Analysis</h2>
+
+<h3 class="text-primary">Score: {{ score }}/100</h3>
+
+<hr>
+
+<h4>✅ Good Points</h4>
+<ul>
+{% for g in good_points %}
+<li>{{ g }}</li>
+{% endfor %}
+</ul>
+
+<h4>⚠ Issues</h4>
+<ul>
+{% for i in issues %}
+<li>{{ i }}</li>
+{% endfor %}
+</ul>
+
+
+
+</div>
+
+{% endblock %}

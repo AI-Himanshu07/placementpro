@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<div class="container mt-4">
+
+<h2 class="mb-4">🏢 {{ company.name }} Dashboard</h2>
+
+<!-- CARDS -->
+<div class="row text-center">
+
+<div class="col-md-4">
+<div class="card p-4 shadow-sm">
+<h6 class="text-muted">📄 Applications</h6>
+<h2>{{ total_apps|default:0 }}</h2>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card p-4 shadow-sm">
+<h6 class="text-muted">✅ Selected</h6>
+<h2>{{ selected|default:0 }}</h2>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card p-4 shadow-sm">
+<h6 class="text-muted">❌ Rejected</h6>
+<h2>{{ rejected|default:0 }}</h2>
+</div>
+</div>
+
+</div>
+
+<!-- SAFE DATA -->
+<div id="chartData"
+     data-total="{{ total_apps|default:0 }}"
+     data-selected="{{ selected|default:0 }}"
+     data-rejected="{{ rejected|default:0 }}">
+</div>
+
+<!-- CHARTS -->
+<div class="row mt-5">
+
+<div class="col-md-6">
+<div class="card p-3 shadow-sm">
+<h6 class="text-center">📊 Applications Overview</h6>
+<canvas id="barChart" style="max-height:280px;"></canvas>
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="card p-3 shadow-sm">
+<h6 class="text-center">📈 Selection Ratio</h6>
+<canvas id="pieChart" style="max-height:280px;"></canvas>
+</div>
+</div>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const dataDiv = document.getElementById("chartData");
+
+const total = parseInt(dataDiv.dataset.total) || 0;
+const selected = parseInt(dataDiv.dataset.selected) || 0;
+const rejected = parseInt(dataDiv.dataset.rejected) || 0;
+
+// BAR CHART
+new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+        labels: ['Total', 'Selected', 'Rejected'],
+        datasets: [{
+            data: [total, selected, rejected],
+            backgroundColor: ['#3b82f6', '#60a5fa', '#93c5fd']
+        }]
+    },
+    options: {
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+    }
+});
+
+// PIE CHART
+new Chart(document.getElementById('pieChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Selected', 'Rejected'],
+        datasets: [{
+            data: [selected, rejected],
+            backgroundColor: ['#10b981', '#ef4444']
+        }]
+    },
+    options: {
+        cutout: '65%'
+    }
+});
+
+</script>
+
+{% endblock %}

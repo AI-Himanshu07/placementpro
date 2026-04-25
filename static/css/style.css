@@ -1,0 +1,88 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f4f6f9;
+    color: #2c3e50;
+}
+
+/* NAVBAR */
+nav {
+    background-color: #ffffff;
+    padding: 20px 60px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+nav a {
+    color: #2c3e50;
+    margin-right: 35px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* CONTAINER */
+.container {
+    padding: 60px;
+}
+
+/* PAGE TITLE */
+h1 {
+    font-size: 26px;
+    margin-bottom: 30px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+/* TABLE CARD STYLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+}
+
+/* TABLE HEADER */
+th {
+    background-color: #2563eb;
+    color: white;
+    padding: 18px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* TABLE BODY */
+td {
+    padding: 16px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover {
+    background-color: #f9fafb;
+    transition: 0.2s ease-in-out;
+}
+input, select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}

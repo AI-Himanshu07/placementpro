@@ -1,0 +1,11 @@
+<h1>{{ student.name }}</h1>
+
+<p>{{ student.email }}</p>
+<p>{{ student.branch }}</p>
+<p>{{ student.cgpa }}</p>
+
+<h2>AI Matching Result</h2>
+
+{% for r in result %}
+<p>{{ r.company }} → Score: {{ r.score }}</p>
+{% endfor %}

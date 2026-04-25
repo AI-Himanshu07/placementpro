@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-4">
+
+<h2 class="mb-4">📊 Admin Dashboard</h2>
+
+<!-- CARDS -->
+<div class="row text-center">
+
+<div class="col-md-4">
+<div class="card p-4 shadow-sm border-0" style="background:#eef2ff;">
+<h6 class="text-muted">🎓 Students</h6>
+<h2>{{ students|default:0 }}</h2>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card p-4 shadow-sm border-0" style="background:#ecfdf5;">
+<h6 class="text-muted">🏢 Companies</h6>
+<h2>{{ companies|default:0 }}</h2>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card p-4 shadow-sm border-0" style="background:#fffbeb;">
+<h6 class="text-muted">📄 Applications</h6>
+<h2>{{ applications|default:0 }}</h2>
+</div>
+</div>
+
+</div>
+
+<!-- DATA -->
+<div id="chartData"
+     data-students="{{ students|default:0 }}"
+     data-companies="{{ companies|default:0 }}"
+     data-applications="{{ applications|default:0 }}"
+     data-selected="{{ selected|default:0 }}"
+     data-rejected="{{ rejected|default:0 }}"
+     data-pending="{{ pending|default:0 }}">
+</div>
+
+<!-- CHARTS -->
+<div class="row mt-5">
+
+<div class="col-md-6">
+<div class="card p-3 shadow-sm border-0">
+<h6 class="text-center">📊 System Overview</h6>
+<canvas id="barChart" style="max-height:280px;"></canvas>
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="card p-3 shadow-sm border-0">
+<h6 class="text-center">📈 Distribution</h6>
+<canvas id="pieChart" style="max-height:280px;"></canvas>
+</div>
+</div>
+
+</div>
+
+<!-- RESULT GRAPH -->
+<div class="row mt-4">
+<div class="col-md-12">
+<div class="card p-3 shadow-sm border-0">
+<h6 class="text-center">📊 Selection vs Rejection vs Pending</h6>
+<canvas id="rateChart" style="max-height:300px;"></canvas>
+</div>
+</div>
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const dataDiv = document.getElementById("chartData");
+
+const students = parseInt(dataDiv.dataset.students) || 0;
+const companies = parseInt(dataDiv.dataset.companies) || 0;
+const applications = parseInt(dataDiv.dataset.applications) || 0;
+
+const selected = parseInt(dataDiv.dataset.selected) || 0;
+const rejected = parseInt(dataDiv.dataset.rejected) || 0;
+const pending = parseInt(dataDiv.dataset.pending) || 0;
+
+// 🎨 COLORS
+
+// PURPLE (Bar Chart)
+const purpleMain = 'rgba(139,92,246,0.8)';
+const purpleSoft = 'rgba(167,139,250,0.5)';
+
+// GREEN (Pie Chart)
+const greenMain = 'rgba(34,197,94,0.8)';
+const greenSoft = 'rgba(134,239,172,0.5)';
+
+// RESULT COLORS
+const green =  'rgba(22,163,74,0.9)';
+const red =  'rgba(220,38,38,0.9)';
+const yellow = 'rgba(202,138,4,0.9)';
+
+//  BAR CHART
+new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+        labels: ['Students', 'Companies', 'Applications'],
+        datasets: [{
+            data: [students, companies, applications],
+            backgroundColor: [purpleMain, purpleMain, purpleMain],
+        }]
+    },
+    options: {
+        plugins: { legend: { display: false }},
+        scales: { y: { beginAtZero: true }},
+        animation: { duration: 1200 }
+    }
+});
+
+//  PIE CHART
+new Chart(document.getElementById('pieChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Students', 'Companies', 'Applications'],
+        datasets: [{
+            data: [students, companies, applications],
+            backgroundColor: [greenMain, greenSoft, greenMain],
+        }]
+    },
+    options: {
+        cutout: '70%',
+        plugins: { legend: { position: 'bottom' }}
+    }
+});
+
+// 📊 RESULT GRAPH (HORIZONTAL)
+new Chart(document.getElementById('rateChart'), {
+    type: 'bar',
+    data: {
+        labels: ['Selected', 'Rejected', 'Pending'],
+        datasets: [{
+            data: [selected, rejected, pending],
+            backgroundColor: [green, red, yellow],
+            borderRadius: 8
+        }]
+    },
+    options: {
+        indexAxis: 'y',
+        plugins: { legend: { display: false }},
+        scales: { x: { beginAtZero: true }}
+    }
+});
+
+</script>
+
+{% endblock %}

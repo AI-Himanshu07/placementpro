@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PlacementPro</title>
+
+    <!-- BOOTSTRAP -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- ICONS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+
+/* BODY */
+body {
+    display: flex;
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #fff7ed, #ffedd5);
+    min-height: 100vh;
+}
+
+/* WAVY BACKGROUND */
+body::after {
+    content: "";
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 45%;
+    background: linear-gradient(120deg, #fb923c, #fdba74);
+    clip-path: ellipse(80% 100% at 50% 100%);
+    z-index: -1;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 230px;
+    height: 100vh;
+    background: linear-gradient(180deg, #ffedd5, #fdba74);
+    color: #7c2d12;
+    padding: 20px;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+}
+
+/* LOGO */
+.sidebar h3 {
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+/* LINKS */
+.sidebar a {
+    color: #7c2d12;
+    display: block;
+    padding: 10px 12px;
+    margin: 5px 0;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    background: #f97316;
+    color: white;
+    transform: translateX(5px);
+}
+
+.sidebar a.active {
+    background: #ea580c;
+    color: white;
+}
+
+/* CONTENT */
+.content {
+    margin-left: 230px;
+    padding: 30px;
+    width: 100%;
+}
+
+/* FIX FOR LOGIN PAGE */
+.no-sidebar .content {
+    margin-left: 0 !important;
+}
+
+/* CARDS */
+.card {
+    border-radius: 16px;
+    border: none;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(6px);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* BUTTON */
+.btn {
+    border-radius: 8px;
+}
+
+/* USER INFO */
+.user-info {
+    color: #ffffff;
+    font-weight: 600;
+    background: rgba(0,0,0,0.3);
+    padding: 8px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* LOGOUT */
+.logout-btn {
+    background: #dc2626;
+    color: #ffffff !important;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 8px;
+    text-align: center;
+    display: block;
+}
+
+.sidebar .bottom {
+    margin-top: auto;
+}
+
+/* COMPANY CARD */
+.company-card {
+    border-radius: 16px;
+    background: linear-gradient(135deg, #fcf4f5, #b3e8f7); /* soft red cloud */
+    transition: 0.3s;
+}
+
+.company-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 25px rgba(243, 80, 80, 0.2);
+}
+
+/* COMPANY NAME */
+.company-name {
+    color: #fd0713; /* light blue */
+    font-weight: 600;
+}
+
+/* LOGO */
+.company-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    margin-right: 15px;
+    object-fit: cover;
+}
+
+/* LOGO PLACEHOLDER */
+.company-logo-placeholder {
+    width: 50px;
+    height: 50px;
+    background: #ede9fe;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+
+/* VIEW JOB BUTTON */
+.view-job-btn {
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+.view-job-btn:hover {
+    background: #e8e4f0;
+    color: white;
+}
+
+/* JOB CARD */
+.job-card {
+    border-radius: 12px;
+    margin-bottom: 10px;
+    background: #f3e7f6;
+    transition: 0.2s;
+}
+
+.job-card:hover {
+    background: #ebd9ee;
+}
+
+/* JOB TITLE */
+.job-title {
+    color: #9453fc;
+}
+
+
+</style>
+</head>
+
+<script>
+function goBack() {
+
+    //  go to previous page if exists
+    if (document.referrer && document.referrer !== window.location.href) {
+        window.history.back();
+        return;
+    }
+
+
+    var isSuperuser = "{{ request.user.is_superuser }}" === "True";
+    var isStaff = "{{ request.user.is_staff }}" === "True";
+    var isCompany = "{{ request.user.company|default:'' }}" !== "";
+
+    if (isSuperuser) {
+        window.location.href = "/dashboard/";
+    } else if (isStaff) {
+        window.location.href = "/students/";
+    } else if (isCompany) {
+        window.location.href = "/companies/dashboard/";
+    } else {
+        window.location.href = "/students/dashboard/";
+    }
+
+}
+</script>
+<body class="{% if not user.is_authenticated %}no-sidebar{% endif %}">
+
+<!-- ✅ SIDEBAR ONLY IF USER LOGGED IN -->
+{% if user.is_authenticated and not '/login' in request.path %}
+
+<div class="sidebar">
+
+    <h3>🚀 PlacementPro</h3>
+
+    {% if user.is_staff %}
+
+        <a href="/dashboard/">📊 Dashboard</a>
+        <a href="/students/">🎓 Students</a>
+        <a href="/companies/">🏢 Companies</a>
+        <a href="/students/applications/">📄 Applications</a>
+
+        {% if user.is_superuser %}
+    <a href="/students/add-notification/">🔔 Send Notification</a>
+
+    <!--  Admin panel only for superuser -->
+    <a href="/admin/" class="btn btn-dark mt-2">
+        ⚙️ Admin Panel
+    </a>
+
+{% else %}
+    <a href="/students/notifications/">🔔 Notifications</a>
+{% endif %}
+    {% elif user.company %}
+
+        <a href="/companies/dashboard/">📊 Dashboard</a>
+        <a href="/companies/applications/">📄 Applications</a>
+        <a href="/companies/jobs/">💼 Jobs</a>
+
+    {% else %}
+
+        <a href="/students/dashboard/">📊 Dashboard</a>
+        <a href="/companies/">🏢 Companies</a>
+        <a href="/students/applications/">📄 My Applications</a>
+        <a href="/students/notifications/">🔔 Notifications</a>
+
+    {% endif %}
+
+    <div class="bottom">
+        <div class="user-info mb-2">
+            👤 {{ user.username }}
+        </div>
+
+        <a href="/logout/" class="logout-btn">
+            🚪 Logout
+        </a>
+    </div>
+
+</div>
+
+{% endif %}
+
+<!-- CONTENT -->
+<div class="content">
+    <div class="container mt-3">
+
+    <!-- ✅ BACK BUTTON ONLY WHEN LOGGED IN -->
+    {% if user.is_authenticated and not '/login' in request.path %}
+    <div class="mb-3 text-end">
+        <button onclick="goBack()" class="btn btn-outline-dark btn-sm">
+            ⬅ Back
+        </button>
+    </div>
+    {% endif %}
+
+</div>
+
+{% block content %}{% endblock %}
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
