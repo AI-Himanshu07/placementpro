@@ -9,7 +9,6 @@ from django.contrib import messages
 # 🔐 LOGIN
 def login_view(request):
 
-    # ✅ FIX: already logged-in user should NOT see login page
     if request.user.is_authenticated:
 
         if request.user.is_superuser or request.user.is_staff:
@@ -22,23 +21,24 @@ def login_view(request):
             return redirect('/students/dashboard/')
 
     if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
+        username = request.POST.get("username", "").strip()
+        password = request.POST.get("password", "").strip()
+
+        if not username or not password:
+            messages.error(request, "Please fill all fields")
+            return render(request, 'login.html')
 
         user = authenticate(request, username=username, password=password)
 
-        if user:
+        if user is not None:
             login(request, user)
 
-            # 👑 ADMIN / STAFF
             if user.is_superuser or user.is_staff:
                 return redirect('/dashboard/')
 
-            # 🏢 COMPANY
             elif Company.objects.filter(user=user).exists():
                 return redirect('/companies/dashboard/')
 
-            # 🎓 STUDENT
             else:
                 return redirect('/students/dashboard/')
 
