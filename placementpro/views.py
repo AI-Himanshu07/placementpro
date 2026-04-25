@@ -9,44 +9,59 @@ from django.contrib import messages
 # 🔐 LOGIN
 def login_view(request):
 
+    # already logged in users
     if request.user.is_authenticated:
-        if request.user.is_superuser or request.user.is_staff:
-            return redirect('/dashboard/')
 
-        # SAFE CHECK (NO CRASH)
-        if Company.objects.filter(user=request.user).exists():
-            return redirect('/companies/dashboard/')
+        try:
+            if request.user.is_superuser or request.user.is_staff:
+                return redirect('/dashboard/')
 
-        if Student.objects.filter(user=request.user).exists():
-            return redirect('/students/dashboard/')
+            if Company.objects.filter(user=request.user).exists():
+                return redirect('/companies/dashboard/')
+
+            if Student.objects.filter(user=request.user).exists():
+                return redirect('/students/dashboard/')
+
+        except Exception:
+            return redirect('/')
 
     if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
+        try:
+            username = request.POST.get("username", "").strip()
+            password = request.POST.get("password", "").strip()
 
-        if not username or not password:
-            messages.error(request, "Please fill all fields")
-            return render(request, "login.html")
+            # prevent empty crash
+            if not username or not password:
+                messages.error(request, "Please fill all fields")
+                return render(request, "login.html")
 
-        user = authenticate(request, username=username, password=password)
+            user = authenticate(request, username=username, password=password)
 
-        if user is not None:
+            # WRONG LOGIN (SAFE)
+            if user is None:
+                messages.error(request, "Invalid username or password")
+                return render(request, "login.html")
+
+            # LOGIN SUCCESS
             login(request, user)
 
             if user.is_superuser or user.is_staff:
                 return redirect('/dashboard/')
 
-            # SAFE CHECK AGAIN
-            if Company.objects.filter(user=user).exists():
-                return redirect('/companies/dashboard/')
+            try:
+                if Company.objects.filter(user=user).exists():
+                    return redirect('/companies/dashboard/')
+            except:
+                pass
 
             return redirect('/students/dashboard/')
 
-        else:
-            messages.error(request, "Invalid username or password")
+        except Exception as e:
+            # THIS PREVENTS 500 COMPLETELY
+            messages.error(request, "Something went wrong. Please try again.")
+            return render(request, "login.html")
 
     return render(request, "login.html")
-
 
 # 📊 DASHBOARD
 @login_required
