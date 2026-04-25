@@ -10,29 +10,23 @@ from django.contrib import messages
 def login_view(request):
 
     if request.user.is_authenticated:
-
         if request.user.is_superuser or request.user.is_staff:
             return redirect('/dashboard/')
 
-        try:
-            if Company.objects.filter(user=request.user).exists():
-                return redirect('/companies/dashboard/')
-        except:
-            pass
+        # SAFE CHECK (NO CRASH)
+        if Company.objects.filter(user=request.user).exists():
+            return redirect('/companies/dashboard/')
 
-        try:
-            if Student.objects.filter(user=request.user).exists():
-                return redirect('/students/dashboard/')
-        except:
-            pass
+        if Student.objects.filter(user=request.user).exists():
+            return redirect('/students/dashboard/')
 
     if request.method == "POST":
-        username = request.POST.get("username", "").strip()
-        password = request.POST.get("password", "").strip()
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
         if not username or not password:
             messages.error(request, "Please fill all fields")
-            return render(request, 'login.html')
+            return render(request, "login.html")
 
         user = authenticate(request, username=username, password=password)
 
@@ -42,18 +36,16 @@ def login_view(request):
             if user.is_superuser or user.is_staff:
                 return redirect('/dashboard/')
 
-            try:
-                if Company.objects.filter(user=user).exists():
-                    return redirect('/companies/dashboard/')
-            except:
-                pass
+            # SAFE CHECK AGAIN
+            if Company.objects.filter(user=user).exists():
+                return redirect('/companies/dashboard/')
 
             return redirect('/students/dashboard/')
 
         else:
             messages.error(request, "Invalid username or password")
 
-    return render(request, 'login.html')
+    return render(request, "login.html")
 
 
 # 📊 DASHBOARD
