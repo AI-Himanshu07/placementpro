@@ -123,3 +123,6 @@ MEDIA_ROOT = BASE_DIR /'media'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+CSRF_TRUSTED_ORIGINS = [
+    "https://web-production-bf47c.up.railway.app"
+]
