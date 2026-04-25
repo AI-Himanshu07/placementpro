@@ -14,11 +14,17 @@ def login_view(request):
         if request.user.is_superuser or request.user.is_staff:
             return redirect('/dashboard/')
 
-        elif Company.objects.filter(user=request.user).exists():
-            return redirect('/companies/dashboard/')
+        try:
+            if Company.objects.filter(user=request.user).exists():
+                return redirect('/companies/dashboard/')
+        except:
+            pass
 
-        elif Student.objects.filter(user=request.user).exists():
-            return redirect('/students/dashboard/')
+        try:
+            if Student.objects.filter(user=request.user).exists():
+                return redirect('/students/dashboard/')
+        except:
+            pass
 
     if request.method == "POST":
         username = request.POST.get("username", "").strip()
@@ -36,11 +42,13 @@ def login_view(request):
             if user.is_superuser or user.is_staff:
                 return redirect('/dashboard/')
 
-            elif Company.objects.filter(user=user).exists():
-                return redirect('/companies/dashboard/')
+            try:
+                if Company.objects.filter(user=user).exists():
+                    return redirect('/companies/dashboard/')
+            except:
+                pass
 
-            else:
-                return redirect('/students/dashboard/')
+            return redirect('/students/dashboard/')
 
         else:
             messages.error(request, "Invalid username or password")
