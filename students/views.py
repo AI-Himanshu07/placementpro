@@ -271,55 +271,45 @@ def delete_notification(request, id):
 # 🔹 APPLY JOB (FIXED)
 @login_required
 def apply_job(request, job_id):
-    student = get_object_or_404(Student, user=request.user)
-    job = get_object_or_404(Job, id=job_id)
+    from .models import Student, Application
+    from companies.models import Job
 
-    # ❌ prevent duplicate
-    if Application.objects.filter(student=student, job=job).exists():
-        return redirect('home')
+    student = Student.objects.get(user=request.user)
+    job = Job.objects.get(id=job_id)
 
-    # ❌ eligibility check (important!)
-    if student.cgpa < job.min_cgpa:
+    # ❌ prevent duplicate (per company)
+    if Application.objects.filter(student=student, company=job.company).exists():
         return redirect('home')
 
     Application.objects.create(
         student=student,
-        job=job,
         company=job.company,
         status="Pending"
     )
 
     return redirect('home')
-
-
 @login_required
 def admin_apply_job(request, job_id):
-    
-      # 🔒 THIS IS THE BONUS LINE
-    if not request.user.is_superuser:
-        return redirect('home')
-    
-    from students.models import Student, Application
+    from .models import Student, Application
     from companies.models import Job
 
-    job = get_object_or_404(Job, id=job_id)
+    job = Job.objects.get(id=job_id)
     students = Student.objects.all()
 
     if request.method == "POST":
         student_id = request.POST.get("student_id")
-        student = get_object_or_404(Student, id=student_id)
+        student = Student.objects.get(id=student_id)
+
+        # ❌ prevent duplicate
+        if Application.objects.filter(student=student, company=job.company).exists():
+            return redirect('/companies/')
 
         # ❌ eligibility check
         if student.cgpa < job.min_cgpa:
             return redirect('/companies/')
 
-        # ❌ prevent duplicate
-        if Application.objects.filter(student=student, job=job).exists():
-            return redirect('/companies/')
-
         Application.objects.create(
             student=student,
-            job=job,
             company=job.company,
             status="Pending"
         )
@@ -327,6 +317,5 @@ def admin_apply_job(request, job_id):
         return redirect('/companies/')
 
     return render(request, 'students/admin_apply_job.html', {
-        'students': students,
-        'job': job
+        'students': students
     })
