@@ -271,39 +271,55 @@ def delete_notification(request, id):
 # 🔹 APPLY JOB (FIXED)
 @login_required
 def apply_job(request, job_id):
+    student = get_object_or_404(Student, user=request.user)
     job = get_object_or_404(Job, id=job_id)
-    student = Student.objects.filter(user=request.user).first()
 
-    if not student:
-        return redirect('/')
+    # ❌ prevent duplicate
+    if Application.objects.filter(student=student, job=job).exists():
+        return redirect('home')
 
+    # ❌ eligibility check (important!)
     if student.cgpa < job.min_cgpa:
-        return redirect('/companies/')
+        return redirect('home')
 
-    Application.objects.get_or_create(
+    Application.objects.create(
         student=student,
-        company=job.company
+        job=job,
+        company=job.company,
+        status="Pending"
     )
 
-    return redirect('/students/applications/')
+    return redirect('home')
+
+
 @login_required
 def admin_apply_job(request, job_id):
-    from .models import Student, Application
+    
+      # 🔒 THIS IS THE BONUS LINE
+    if not request.user.is_superuser:
+        return redirect('home')
+    
+    from students.models import Student, Application
     from companies.models import Job
 
-    job = Job.objects.get(id=job_id)
+    job = get_object_or_404(Job, id=job_id)
     students = Student.objects.all()
 
     if request.method == "POST":
         student_id = request.POST.get("student_id")
-        student = Student.objects.get(id=student_id)
+        student = get_object_or_404(Student, id=student_id)
 
-        # 🔥 ELIGIBILITY CHECK
+        # ❌ eligibility check
         if student.cgpa < job.min_cgpa:
-            return redirect('/companies/')  # or show message later
+            return redirect('/companies/')
+
+        # ❌ prevent duplicate
+        if Application.objects.filter(student=student, job=job).exists():
+            return redirect('/companies/')
 
         Application.objects.create(
             student=student,
+            job=job,
             company=job.company,
             status="Pending"
         )
@@ -311,5 +327,6 @@ def admin_apply_job(request, job_id):
         return redirect('/companies/')
 
     return render(request, 'students/admin_apply_job.html', {
-        'students': students
+        'students': students,
+        'job': job
     })

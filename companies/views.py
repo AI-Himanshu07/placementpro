@@ -15,14 +15,24 @@ def company_list(request):
     companies = Company.objects.all()
 
     student = None
-    if Student.objects.filter(user=request.user).exists():
-        student = Student.objects.get(user=request.user)
+    applied_jobs = []
 
-    return render(request, 'companies/company_list.html', {
+    if request.user.is_authenticated:
+        try:
+            student = Student.objects.get(user=request.user)
+
+            # get all applied job ids
+            applied_jobs = Application.objects.filter(student=student)\
+                                              .values_list('job_id', flat=True)
+
+        except:
+            student = None
+
+    return render(request, 'your_template.html', {
         'companies': companies,
-        'student': student
+        'student': student,
+        'applied_jobs': applied_jobs
     })
-
 
 @login_required
 def company_detail(request, id):
