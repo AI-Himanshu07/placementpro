@@ -9,121 +9,118 @@
 
 <div class="card p-4 mb-4 shadow-sm border-0 company-card">
 
-```
-<!-- HEADER -->
-<div class="d-flex align-items-center mb-3">
+    <!-- HEADER -->
+    <div class="d-flex align-items-center mb-3">
 
-    {% if company.logo %}
-        <img src="{{ company.logo.url }}" class="company-logo">
-    {% else %}
-        <div class="company-logo-placeholder">🏢</div>
-    {% endif %}
+        {% if company.logo %}
+            <img src="{{ company.logo.url }}" class="company-logo">
+        {% else %}
+            <div class="company-logo-placeholder">🏢</div>
+        {% endif %}
 
-    <div>
-        <h5 class="fw-bold mb-0 company-name">
-            {{ company.name }}
-        </h5>
-        <small class="text-muted">Hiring Now</small>
+        <div>
+            <h5 class="fw-bold mb-0 company-name">
+                {{ company.name }}
+            </h5>
+            <small class="text-muted">Hiring Now</small>
+        </div>
+
     </div>
 
-</div>
+    <p class="text-muted">{{ company.description }}</p>
 
-<p class="text-muted">{{ company.description }}</p>
+    <p>
+        <strong>Min CGPA:</strong>
+        <span class="badge bg-light text-dark">
+            {{ company.min_cgpa }}
+        </span>
+    </p>
 
-<p>
-    <strong>Min CGPA:</strong>
-    <span class="badge bg-light text-dark">
-        {{ company.min_cgpa }}
-    </span>
-</p>
+    {% if company.jobs.all %}
+    <div class="mb-3">
 
-{% if company.jobs.all %}
-<div class="mb-3">
-
-    <!-- BUTTON -->
-    <button class="btn btn-outline-dark btn-sm w-100 view-job-btn"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#jobs{{ company.id }}">
-        📂 View Jobs
-    </button>
-
-    <!-- JOB LIST -->
-    <div class="collapse mt-3" id="jobs{{ company.id }}">
-        <ul class="list-group">
-
-            {% for job in company.jobs.all %}
-            <li class="list-group-item job-card">
-
-                <strong class="job-title">
-                    {{ job.title }}
-                </strong><br>
-
-                <small class="text-muted">
-                    {{ job.description }}
-                </small><br>
-
-                <small>
-                    📊 Min CGPA:
-                    <span class="badge bg-light text-dark">
-                        {{ job.min_cgpa }}
-                    </span>
-                </small><br>
-
-                <!-- ADMIN APPLY -->
-                {% if user.is_superuser %}
-                    <a href="/students/admin-apply-job/{{ job.id }}/"
-                       class="btn btn-warning btn-sm mt-2">
-                       Admin Apply
-                    </a>
-                {% endif %}
-
-                <!-- STUDENT APPLY -->
-               {% if user.is_authenticated and student %}
-
-    {% if job.id in applied_jobs %}
-        <button class="btn btn-info btn-sm mt-2" disabled>
-            Already Applied
+        <!-- BUTTON -->
+        <button class="btn btn-outline-dark btn-sm w-100 view-job-btn"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#jobs{{ company.id }}">
+            📂 View Jobs
         </button>
 
-    {% elif student.cgpa >= job.min_cgpa %}
-        <a href="/students/apply-job/{{ job.id }}/"
-           class="btn btn-success btn-sm mt-2">
-           Apply
-        </a>
+        <!-- JOB LIST -->
+        <div class="collapse mt-3" id="jobs{{ company.id }}">
+            <ul class="list-group">
 
-    {% else %}
-        <button class="btn btn-secondary btn-sm mt-2" disabled>
-            Not Eligible
-        </button>
+                {% for job in company.jobs.all %}
+                <li class="list-group-item job-card">
 
-    {% endif %}
+                    <strong class="job-title">
+                        {{ job.title }}
+                    </strong><br>
 
-{% else %}
-    <a href="/login/" class="btn btn-outline-primary btn-sm mt-2">
-        Login to Apply
-    </a>
-{% endif %}
+                    <small class="text-muted">
+                        {{ job.description }}
+                    </small><br>
 
-            </li>
+                    <small>
+                        📊 Min CGPA:
+                        <span class="badge bg-light text-dark">
+                            {{ job.min_cgpa }}
+                        </span>
+                    </small><br>
 
-            {% empty %}
-            <li class="list-group-item text-muted text-center">
-                No jobs available
-            </li>
-            {% endfor %}
+                    <!-- ADMIN APPLY -->
+                    {% if user.is_superuser %}
+                        <a href="/students/admin-apply-job/{{ job.id }}/"
+                           class="btn btn-warning btn-sm mt-2">
+                           Admin Apply
+                        </a>
+                    {% endif %}
 
-        </ul>
+                    <!-- STUDENT APPLY -->
+                    {% if user.is_authenticated and student %}
+
+                        {% if company.id in applied_companies %}
+                            <button class="btn btn-info btn-sm mt-2" disabled>
+                                ✅ Already Applied
+                            </button>
+
+                        {% elif student.cgpa >= job.min_cgpa %}
+                            <a href="/students/apply-job/{{ job.id }}/"
+                               class="btn btn-success btn-sm mt-2">
+                               Apply
+                            </a>
+
+                        {% else %}
+                            <button class="btn btn-secondary btn-sm mt-2" disabled>
+                                Not Eligible
+                            </button>
+
+                        {% endif %}
+
+                    {% else %}
+                        <a href="/login/" class="btn btn-outline-primary btn-sm mt-2">
+                            Login to Apply
+                        </a>
+                    {% endif %}
+
+                </li>
+
+                {% empty %}
+                <li class="list-group-item text-muted text-center">
+                    No jobs available
+                </li>
+                {% endfor %}
+
+            </ul>
+        </div>
+
     </div>
-
-</div>
-{% endif %}
-```
+    {% endif %}
 
 </div>
 
 {% empty %}
-
 <p class="text-center text-muted">No companies available</p>
 {% endfor %}
 

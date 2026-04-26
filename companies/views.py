@@ -11,12 +11,29 @@ def is_staff(user):
     return user.is_staff
 
 
+
 def company_list(request):
-    from companies.models import Company
-
     companies = Company.objects.all()
+    applied_companies = []
+    student = None
 
-    return render(request, 'companies/company_list.html', {'companies': companies})
+    if request.user.is_authenticated:
+        try:
+            student = Student.objects.get(user=request.user)
+
+            #  FIX: use company_id (NOT job_id)
+            applied_companies = Application.objects.filter(
+                student=student
+            ).values_list('company_id', flat=True)
+
+        except Student.DoesNotExist:
+            pass
+
+    return render(request, 'companies/company_list.html', {
+        'companies': companies,
+        'student': student,
+        'applied_companies': applied_companies
+    })
 
 @login_required
 def company_detail(request, id):

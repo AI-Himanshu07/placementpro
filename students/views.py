@@ -277,9 +277,9 @@ def apply_job(request, job_id):
     student = Student.objects.get(user=request.user)
     job = Job.objects.get(id=job_id)
 
-    # ❌ prevent duplicate (per company)
+    # prevent duplicate per company
     if Application.objects.filter(student=student, company=job.company).exists():
-        return redirect('home')
+        return redirect('/companies/')
 
     Application.objects.create(
         student=student,
@@ -287,7 +287,7 @@ def apply_job(request, job_id):
         status="Pending"
     )
 
-    return redirect('home')
+    return redirect('/companies/')
 @login_required
 def admin_apply_job(request, job_id):
     from .models import Student, Application

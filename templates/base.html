@@ -131,7 +131,7 @@ body::after {
 /* COMPANY CARD */
 .company-card {
     border-radius: 16px;
-    background: linear-gradient(135deg, #fcf4f5, #b3e8f7); /* soft red cloud */
+    background: linear-gradient(135deg, #fcf4f5, #b3e8f7);
     transition: 0.3s;
 }
 
@@ -142,7 +142,7 @@ body::after {
 
 /* COMPANY NAME */
 .company-name {
-    color: #fd0713; /* light blue */
+    color: #fd0713;
     font-weight: 600;
 }
 
@@ -195,39 +195,38 @@ body::after {
     color: #9453fc;
 }
 
-
 </style>
 </head>
 
 <script>
 function goBack() {
 
-    //  go to previous page if exists
+    // safe back
     if (document.referrer && document.referrer !== window.location.href) {
         window.history.back();
         return;
     }
 
-
+    // fallback routing
     var isSuperuser = "{{ request.user.is_superuser }}" === "True";
     var isStaff = "{{ request.user.is_staff }}" === "True";
-    var isCompany = "{{ request.user.company|default:'' }}" !== "";
+    var hasCompany = "{{ request.user.company|default:'' }}" !== "";
 
     if (isSuperuser) {
         window.location.href = "/dashboard/";
     } else if (isStaff) {
         window.location.href = "/students/";
-    } else if (isCompany) {
+    } else if (hasCompany) {
         window.location.href = "/companies/dashboard/";
     } else {
         window.location.href = "/students/dashboard/";
     }
-
 }
 </script>
+
 <body class="{% if not user.is_authenticated %}no-sidebar{% endif %}">
 
-<!-- ✅ SIDEBAR ONLY IF USER LOGGED IN -->
+<!-- SIDEBAR -->
 {% if user.is_authenticated and not '/login' in request.path %}
 
 <div class="sidebar">
@@ -242,16 +241,12 @@ function goBack() {
         <a href="/students/applications/">📄 Applications</a>
 
         {% if user.is_superuser %}
-    <a href="/students/add-notification/">🔔 Send Notification</a>
+            <a href="/students/add-notification/">🔔 Send Notification</a>
+            <a href="/admin/" class="btn btn-dark mt-2">⚙️ Admin Panel</a>
+        {% else %}
+            <a href="/students/notifications/">🔔 Notifications</a>
+        {% endif %}
 
-    <!--  Admin panel only for superuser -->
-    <a href="/admin/" class="btn btn-dark mt-2">
-        ⚙️ Admin Panel
-    </a>
-
-{% else %}
-    <a href="/students/notifications/">🔔 Notifications</a>
-{% endif %}
     {% elif user.company %}
 
         <a href="/companies/dashboard/">📊 Dashboard</a>
@@ -272,6 +267,11 @@ function goBack() {
             👤 {{ user.username }}
         </div>
 
+        <!-- ✅ NEW HOME BUTTON -->
+        <a href="/" class="btn btn-outline-dark btn-sm mb-2">
+            🏠 Home
+        </a>
+
         <a href="/logout/" class="logout-btn">
             🚪 Logout
         </a>
@@ -285,7 +285,6 @@ function goBack() {
 <div class="content">
     <div class="container mt-3">
 
-    <!-- ✅ BACK BUTTON ONLY WHEN LOGGED IN -->
     {% if user.is_authenticated and not '/login' in request.path %}
     <div class="mb-3 text-end">
         <button onclick="goBack()" class="btn btn-outline-dark btn-sm">
