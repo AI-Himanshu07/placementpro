@@ -16,11 +16,11 @@ SECRET_KEY = os.environ.get(
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = [
     "https://*.railway.app",
-    "https://*.up.railway.app",
 ]
+ALLOWED_HOSTS = ["*"]
+
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -78,7 +78,9 @@ WSGI_APPLICATION = 'placementpro.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='sqlite:///db.sqlite3'
+        default='sqlite:///db.sqlite3',
+        conn_max_age=600,
+        ssl_require=False
     )
 }
 # Password validation
