@@ -12,24 +12,12 @@ def is_staff(user):
 
 
 def company_list(request):
+    from companies.models import Company
+
     companies = Company.objects.all()
 
-    student = None
-    applied_jobs = []
-
-    if request.user.is_authenticated:
-        try:
-            student = Student.objects.get(user=request.user)
-
-            applied_jobs = Application.objects.filter(student=student)\
-                                              .values_list('job_id', flat=True)
-        except Student.DoesNotExist:
-            student = None
-
     return render(request, 'your_template.html', {
-        'companies': companies,
-        'student': student,
-        'applied_jobs': applied_jobs
+        'companies': companies
     })
 @login_required
 def company_detail(request, id):
