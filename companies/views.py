@@ -16,9 +16,8 @@ def company_list(request):
 
     companies = Company.objects.all()
 
-    return render(request, 'your_template.html', {
-        'companies': companies
-    })
+    return render(request, 'companies/company_list.html', {'companies': companies})
+
 @login_required
 def company_detail(request, id):
     company = get_object_or_404(Company, id=id)
