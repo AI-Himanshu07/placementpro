@@ -21,11 +21,9 @@ def company_list(request):
         try:
             student = Student.objects.get(user=request.user)
 
-            # get all applied job ids
             applied_jobs = Application.objects.filter(student=student)\
                                               .values_list('job_id', flat=True)
-
-        except:
+        except Student.DoesNotExist:
             student = None
 
     return render(request, 'your_template.html', {
@@ -33,7 +31,6 @@ def company_list(request):
         'student': student,
         'applied_jobs': applied_jobs
     })
-
 @login_required
 def company_detail(request, id):
     company = get_object_or_404(Company, id=id)
