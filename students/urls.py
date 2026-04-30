@@ -19,4 +19,5 @@ urlpatterns = [
     path('add-notification/', views.add_notification),
     path('delete-notification/<int:id>/', views.delete_notification),
     path('apply-job/<int:job_id>/', views.apply_job),
+    
 ]

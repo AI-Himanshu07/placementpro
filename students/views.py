@@ -307,9 +307,28 @@ def admin_apply_job(request, job_id):
         'students': students
     })
 @login_required
+def add_notification(request):
+
+    if not request.user.is_superuser:
+        return redirect('/students/notifications/')
+
+    if request.method == "POST":
+        message = request.POST.get('message')
+
+        if message:
+            Notification.objects.create(message=message)
+
+        return redirect('/students/notifications/')
+
+    return render(request, 'students/add_notification.html')
+
+
+@login_required
 def view_notifications(request):
     notes = Notification.objects.all().order_by('-id')
     return render(request, 'students/notifications.html', {'notes': notes})
+
+
 @login_required
 def delete_notification(request, id):
     if not request.user.is_superuser:
