@@ -11,7 +11,8 @@
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #f8fafc, #eef2ff);
+    background: linear-gradient(135deg, #fff7ed, #fed7aa);
+    min-height: 100vh;
 }
 
 /* TOP NAVBAR */
@@ -68,8 +69,12 @@ body {
 /* CARD */
 .card {
     border-radius: 16px;
-    border: none;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+    transition: 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
 }
 
 </style>

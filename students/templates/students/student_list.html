@@ -29,12 +29,43 @@
 <td>{{ student.cgpa }}</td>
 
 <td>
+
 {% if student.resume %}
-<a href="{{ student.resume.url }}" target="_blank">📄 View</a>
-<a href="/students/resume/{{ student.id }}/" class="btn btn-info btn-sm">AI Check</a>
+
+    <!-- ✅ VIEW RESUME -->
+    <a href="{{ student.resume.url }}" target="_blank"
+       class="btn btn-outline-primary btn-sm">
+        📄 View
+    </a>
+
+    <!-- ✅ AI CHECK -->
+    <a href="/students/resume/{{ student.id }}/"
+       class="btn btn-info btn-sm">
+        🤖 AI Check
+    </a>
+
+    <!-- ✅ REPLACE RESUME (ONLY OWNER) -->
+    {% if request.user == student.user %}
+        <a href="/students/edit/{{ student.id }}/"
+           class="btn btn-warning btn-sm">
+            🔄 Replace
+        </a>
+    {% endif %}
+
 {% else %}
-No Resume
+
+    <span class="text-muted">No Resume</span>
+
+    <!-- ✅ UPLOAD OPTION -->
+    {% if request.user == student.user %}
+        <a href="/students/edit/{{ student.id }}/"
+           class="btn btn-success btn-sm">
+            Upload
+        </a>
+    {% endif %}
+
 {% endif %}
+
 </td>
 
 <td>

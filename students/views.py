@@ -6,7 +6,7 @@ import re
 from django.contrib import messages
 from .models import Student, Application, Notification
 from companies.models import Company, Job
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 
 # 🔹 STAFF CHECK
@@ -27,13 +27,26 @@ def student_list(request):
 @user_passes_test(is_staff)
 def add_student(request):
     if request.method == 'POST':
+
+        username = request.POST.get('email')  # using email as username
+        password = "123456"  # default password
+
+        user = User.objects.create_user(
+            username=username,
+            password=password,
+            email=request.POST.get('email')  # ✅ IMPORTANT
+        )
+
         Student.objects.create(
+            user=user,
             name=request.POST.get('name'),
             email=request.POST.get('email'),
             cgpa=request.POST.get('cgpa'),
             resume=request.FILES.get('resume')
         )
+
         return redirect('/students/')
+
     return render(request, 'students/add_student.html')
 
 
@@ -48,6 +61,13 @@ def edit_student(request, id):
         student.email = request.POST.get('email')
         student.cgpa = request.POST.get('cgpa')
 
+        # ✅ UPDATE USER EMAIL (VERY IMPORTANT FOR RESET)
+        if student.user:
+            student.user.email = student.email
+            student.user.username = student.email
+            student.user.save()
+
+        # ✅ RESUME FIX
         if request.FILES.get('resume'):
             student.resume = request.FILES.get('resume')
 
@@ -62,6 +82,11 @@ def edit_student(request, id):
 @user_passes_test(is_staff)
 def delete_student(request, id):
     student = get_object_or_404(Student, id=id)
+
+    # delete linked user also
+    if student.user:
+        student.user.delete()
+
     student.delete()
     return redirect('/students/')
 
@@ -80,11 +105,8 @@ def apply_company(request, company_id):
             student = get_object_or_404(Student, id=student_id)
 
             if student.cgpa < company.min_cgpa:
-                return render(request, 'students/admin_apply.html', {
-                    'company': company,
-                    'students': students,
-                    'error': "Low CGPA"
-                })
+                messages.error(request, "Low CGPA")
+                return redirect('/companies/')
 
             Application.objects.get_or_create(student=student, company=company)
 
@@ -161,7 +183,7 @@ def student_dashboard(request):
     })
 
 
-# 🔥 RESUME ANALYSIS (IMPROVED AI-LIKE)
+# 🔥 RESUME ANALYSIS
 @login_required
 def resume_analysis(request, student_id):
     student = get_object_or_404(Student, id=student_id)
@@ -198,14 +220,14 @@ def resume_analysis(request, student_id):
     if len(found) >= 4:
         good_points.append("🔥 Strong skill section")
     elif len(found) > 0:
-        issues.append("⚠ Add more technical skills")
+        issues.append("⚠ Add more skills")
         score -= 10
     else:
         issues.append("❌ No skills detected")
         score -= 20
 
     if "project" not in content:
-        issues.append("⚠ Add projects section")
+        issues.append("⚠ Add projects")
         score -= 10
 
     if score < 0:
@@ -236,48 +258,15 @@ def download_students(request):
     return response
 
 
-# 🔹 NOTIFICATIONS
-@login_required
-def add_notification(request):
-
-    if not request.user.is_superuser:
-        return redirect('/students/notifications/')
-
-    if request.method == "POST":
-        message = request.POST.get('message')
-
-        if message:
-            Notification.objects.create(message=message)
-
-        
-            return redirect('/students/notifications/')
-
-    return render(request, 'students/add_notification.html')
-
-@login_required
-def view_notifications(request):
-    notes = Notification.objects.all().order_by('-id')  # latest first
-    return render(request, 'students/notifications.html', {'notes': notes})
-
-@login_required
-def delete_notification(request, id):
-    if not request.user.is_superuser:
-        return redirect('/students/notifications/')  
-
-    Notification.objects.filter(id=id).delete()
-    return redirect('/students/notifications/')
-
-
-# 🔹 APPLY JOB (FIXED)
+# 🔹 APPLY JOB
 @login_required
 def apply_job(request, job_id):
-    from .models import Student, Application
-    from companies.models import Job
+    student = Student.objects.filter(user=request.user).first()
+    job = get_object_or_404(Job, id=job_id)
 
-    student = Student.objects.get(user=request.user)
-    job = Job.objects.get(id=job_id)
+    if not student:
+        return redirect('/')
 
-    # prevent duplicate per company
     if Application.objects.filter(student=student, company=job.company).exists():
         return redirect('/companies/')
 
@@ -288,23 +277,21 @@ def apply_job(request, job_id):
     )
 
     return redirect('/companies/')
+
+
+# 🔹 ADMIN APPLY JOB
 @login_required
 def admin_apply_job(request, job_id):
-    from .models import Student, Application
-    from companies.models import Job
-
-    job = Job.objects.get(id=job_id)
+    job = get_object_or_404(Job, id=job_id)
     students = Student.objects.all()
 
     if request.method == "POST":
         student_id = request.POST.get("student_id")
-        student = Student.objects.get(id=student_id)
+        student = get_object_or_404(Student, id=student_id)
 
-        # ❌ prevent duplicate
         if Application.objects.filter(student=student, company=job.company).exists():
             return redirect('/companies/')
 
-        # ❌ eligibility check
         if student.cgpa < job.min_cgpa:
             return redirect('/companies/')
 
