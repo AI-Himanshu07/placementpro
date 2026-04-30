@@ -306,3 +306,14 @@ def admin_apply_job(request, job_id):
     return render(request, 'students/admin_apply_job.html', {
         'students': students
     })
+@login_required
+def view_notifications(request):
+    notes = Notification.objects.all().order_by('-id')
+    return render(request, 'students/notifications.html', {'notes': notes})
+@login_required
+def delete_notification(request, id):
+    if not request.user.is_superuser:
+        return redirect('/students/notifications/')
+
+    Notification.objects.filter(id=id).delete()
+    return redirect('/students/notifications/')
