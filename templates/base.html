@@ -33,6 +33,21 @@ body::after {
     z-index: -1;
 }
 
+/* TOP NAVBAR (NEW FIX) */
+.topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 10px 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 /* SIDEBAR */
 .sidebar {
     width: 230px;
@@ -41,48 +56,22 @@ body::after {
     color: #7c2d12;
     padding: 20px;
     position: fixed;
+    top: 60px;
     display: flex;
     flex-direction: column;
-}
-
-/* LOGO */
-.sidebar h3 {
-    font-weight: bold;
-    margin-bottom: 25px;
-}
-
-/* LINKS */
-.sidebar a {
-    color: #7c2d12;
-    display: block;
-    padding: 10px 12px;
-    margin: 5px 0;
-    text-decoration: none;
-    border-radius: 8px;
-    transition: 0.3s;
-}
-
-.sidebar a:hover {
-    background: #f97316;
-    color: white;
-    transform: translateX(5px);
-}
-
-.sidebar a.active {
-    background: #ea580c;
-    color: white;
 }
 
 /* CONTENT */
 .content {
     margin-left: 230px;
-    padding: 30px;
+    padding: 90px 30px 30px 30px;
     width: 100%;
 }
 
 /* FIX FOR LOGIN PAGE */
 .no-sidebar .content {
     margin-left: 0 !important;
+    padding-top: 90px;
 }
 
 /* CARDS */
@@ -124,26 +113,28 @@ body::after {
     display: block;
 }
 
-.sidebar .bottom {
-    margin-top: auto;
-}
-
 /* COMPANY CARD */
 .company-card {
     border-radius: 16px;
-    background: linear-gradient(135deg, #fcf4f5, #b3e8f7);
+    background: linear-gradient(135deg, #e0f7fa, #fce4ec);
     transition: 0.3s;
 }
 
 .company-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 12px 25px rgba(243, 80, 80, 0.2);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.1);
 }
 
-/* COMPANY NAME */
 .company-name {
-    color: #fd0713;
+    color: #0ea5e9;
     font-weight: 600;
+}
+
+/* JOB CARD */
+.job-card {
+    border-radius: 12px;
+    margin-bottom: 10px;
+    background: #f8fafc;
 }
 
 /* LOGO */
@@ -155,7 +146,6 @@ body::after {
     object-fit: cover;
 }
 
-/* LOGO PLACEHOLDER */
 .company-logo-placeholder {
     width: 50px;
     height: 50px;
@@ -167,136 +157,64 @@ body::after {
     margin-right: 15px;
 }
 
-/* VIEW JOB BUTTON */
-.view-job-btn {
-    border-radius: 10px;
-    transition: 0.2s;
-}
-
-.view-job-btn:hover {
-    background: #e8e4f0;
-    color: white;
-}
-
-/* JOB CARD */
-.job-card {
-    border-radius: 12px;
-    margin-bottom: 10px;
-    background: #f3e7f6;
-    transition: 0.2s;
-}
-
-.job-card:hover {
-    background: #ebd9ee;
-}
-
-/* JOB TITLE */
-.job-title {
-    color: #9453fc;
-}
-
 </style>
 </head>
 
-<script>
-function goBack() {
-
-    // safe back
-    if (document.referrer && document.referrer !== window.location.href) {
-        window.history.back();
-        return;
-    }
-
-    // fallback routing
-    var isSuperuser = "{{ request.user.is_superuser }}" === "True";
-    var isStaff = "{{ request.user.is_staff }}" === "True";
-    var hasCompany = "{{ request.user.company|default:'' }}" !== "";
-
-    if (isSuperuser) {
-        window.location.href = "/dashboard/";
-    } else if (isStaff) {
-        window.location.href = "/students/";
-    } else if (hasCompany) {
-        window.location.href = "/companies/dashboard/";
-    } else {
-        window.location.href = "/students/dashboard/";
-    }
-}
-</script>
-
 <body class="{% if not user.is_authenticated %}no-sidebar{% endif %}">
+
+<!-- 🔥 TOP NAVBAR -->
+<div class="topbar">
+    <div class="fw-bold">🚀 PlacementPro</div>
+
+    <div>
+        {% if user.is_authenticated %}
+            <a href="/" class="btn btn-sm btn-outline-dark">Home</a>
+            <a href="/dashboard/" class="btn btn-sm btn-primary">Dashboard</a>
+            <a href="/logout/" class="btn btn-sm btn-danger">Logout</a>
+        {% else %}
+            <a href="/login/" class="btn btn-sm btn-primary">Login</a>
+        {% endif %}
+    </div>
+</div>
 
 <!-- SIDEBAR -->
 {% if user.is_authenticated and not '/login' in request.path %}
-
 <div class="sidebar">
 
-    <h3>🚀 PlacementPro</h3>
+    <h5 class="mb-3">Menu</h5>
 
     {% if user.is_staff %}
-
         <a href="/dashboard/">📊 Dashboard</a>
         <a href="/students/">🎓 Students</a>
         <a href="/companies/">🏢 Companies</a>
         <a href="/students/applications/">📄 Applications</a>
 
         {% if user.is_superuser %}
-            <a href="/students/add-notification/">🔔 Send Notification</a>
-            <a href="/admin/" class="btn btn-dark mt-2">⚙️ Admin Panel</a>
-        {% else %}
-            <a href="/students/notifications/">🔔 Notifications</a>
+            <a href="/admin/">⚙️ Admin Panel</a>
         {% endif %}
 
     {% elif user.company %}
-
         <a href="/companies/dashboard/">📊 Dashboard</a>
-        <a href="/companies/applications/">📄 Applications</a>
         <a href="/companies/jobs/">💼 Jobs</a>
 
     {% else %}
-
         <a href="/students/dashboard/">📊 Dashboard</a>
         <a href="/companies/">🏢 Companies</a>
         <a href="/students/applications/">📄 My Applications</a>
-        <a href="/students/notifications/">🔔 Notifications</a>
-
     {% endif %}
 
-    <div class="bottom">
+    <div class="mt-auto">
         <div class="user-info mb-2">
             👤 {{ user.username }}
         </div>
-
-        <!-- ✅ NEW HOME BUTTON -->
-        <a href="/" class="btn btn-outline-dark btn-sm mb-2">
-            🏠 Home
-        </a>
-
-        <a href="/logout/" class="logout-btn">
-            🚪 Logout
-        </a>
     </div>
 
 </div>
-
 {% endif %}
 
 <!-- CONTENT -->
 <div class="content">
-    <div class="container mt-3">
-
-    {% if user.is_authenticated and not '/login' in request.path %}
-    <div class="mb-3 text-end">
-        <button onclick="goBack()" class="btn btn-outline-dark btn-sm">
-            ⬅ Back
-        </button>
-    </div>
-    {% endif %}
-
-</div>
-
-{% block content %}{% endblock %}
-
+    {% block content %}{% endblock %}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
