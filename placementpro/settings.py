@@ -135,3 +135,4 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 CSRF_TRUSTED_ORIGINS = [
     "https://web-production-bf47c.up.railway.app"
 ]
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
