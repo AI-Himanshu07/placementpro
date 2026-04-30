@@ -19,7 +19,7 @@ urlpatterns = [
     # 🔹 APPS
     path('students/', include('students.urls')),
     path('companies/', include('companies.urls')),
-    path(static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)),
+    
 
     # 🔥 FORGOT PASSWORD FLOW (NEW)
     path('password-reset/',
@@ -46,3 +46,4 @@ urlpatterns = [
          ),
          name='password_reset_complete'),
 ]
+path(static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)),
