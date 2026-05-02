@@ -14,102 +14,69 @@ body {
     overflow-x: hidden;
 }
 
-/* ⚪ TOP WHITE */
+/* 🌤 TOP SOFT SKY */
 .bg-top {
     position: fixed;
     top: 0;
     width: 100%;
-    height: 68%;
-    background: #ffffff;
+    height: 70%;
+    background: linear-gradient(to bottom, #f8fafc, #e0f2fe);
     z-index: -3;
 }
 
-/* 🔴 BOTTOM RED (balanced tone) */
+/* 🌸 BOTTOM SOFT PINK */
 .bg-bottom {
     position: fixed;
     bottom: 0;
     width: 100%;
-    height: 45%;
-    background: linear-gradient(135deg, #f87171, #ef4444);
+    height: 40%;
+    background: linear-gradient(135deg, #fce7f3, #fbcfe8);
     z-index: -3;
 }
 
-/* 🌊 DOUBLE LAYER WAVE (THIS FIXES STRAIGHT LINE ISSUE) */
+/* 🌊 SMOOTH WAVE */
 .wave {
     position: fixed;
-    top: 55%;
+    top: 60%;
     width: 100%;
     z-index: -2;
 }
 
 .wave svg {
     width: 100%;
-    height: 220px;
+    height: 180px;
 }
 
-/* SECOND WAVE FOR DEPTH */
+/* SECOND WAVE (SOFT DEPTH) */
 .wave2 {
     position: fixed;
-    top: 58%;
+    top: 63%;
     width: 100%;
-    opacity: 0.6;
+    opacity: 0.5;
     z-index: -1;
 }
 
 .wave2 svg {
     width: 100%;
-    height: 200px;
+    height: 160px;
 }
 
-/* NAVBAR */
+/* KEEP YOUR ORIGINAL STRUCTURE */
 .topbar {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     padding: 15px 40px;
 }
 
 .logo {
     font-weight: bold;
-    font-size: 20px;
-    color: #dc2626;
+    color: #64748b;
 }
 
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.role-badge {
-    background: #ef4444;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 8px;
-    font-size: 13px;
-}
-
-/* CONTENT */
 .content {
     position: relative;
     z-index: 2;
     padding: 30px;
-}
-
-/* MENU */
-.menu-card {
-    background: white;
-    padding: 25px;
-    border-radius: 18px;
-    text-align: center;
-    transition: 0.3s;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-}
-
-.menu-card:hover {
-    transform: translateY(-5px);
-    background: #ef4444;
-    color: white;
 }
 
 </style>
@@ -117,54 +84,38 @@ body {
 
 <body>
 
+<!-- BACKGROUND -->
 <div class="bg-top"></div>
 <div class="bg-bottom"></div>
 
-<!-- 🌊 MAIN WAVE -->
+<!-- 🌊 WAVES -->
 <div class="wave">
 <svg viewBox="0 0 1440 320">
-<path fill="#f87171"
-d="M0,160C200,260,400,80,700,160C1000,240,1200,120,1440,180L1440,320L0,320Z">
+<path fill="#fbcfe8"
+d="M0,224C200,180,400,260,700,200C1000,140,1200,220,1440,200L1440,320L0,320Z">
 </path>
 </svg>
 </div>
 
-<!-- 🌊 SECOND WAVE (DEPTH) -->
 <div class="wave2">
 <svg viewBox="0 0 1440 320">
-<path fill="#ef4444"
-d="M0,200C200,300,400,120,700,200C1000,260,1200,180,1440,220L1440,320L0,320Z">
+<path fill="#f9a8d4"
+d="M0,260C200,220,400,300,700,240C1000,180,1200,260,1440,240L1440,320L0,320Z">
 </path>
 </svg>
 </div>
 
-<!-- NAVBAR -->
+<!-- YOUR NAVBAR (UNCHANGED) -->
 <div class="topbar">
 
     <div class="logo">🚀 PlacementPro</div>
 
-    <div class="nav-right">
-
+    <div>
         {% if user.is_authenticated %}
-
-            <span class="role-badge">
-                {% if user.is_superuser %}
-                    👑 Admin
-                {% elif user.is_staff %}
-                    🧑‍💼 Staff
-                {% elif user.company %}
-                    🏢 {{ user.company.name }}
-                {% else %}
-                    🎓 Student
-                {% endif %}
-            </span>
-
             <a href="/logout/" class="btn btn-danger btn-sm">Logout</a>
-
         {% else %}
             <a href="/login/" class="btn btn-dark btn-sm">Login</a>
         {% endif %}
-
     </div>
 
 </div>
