@@ -1,87 +1,58 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>PlacementPro Login</title>
+<title>Login</title>
 
 <style>
+
 body {
-    margin: 0;
-    height: 100vh;
-    font-family: Arial;
-    overflow: hidden;
-    background: linear-gradient(135deg, #ffedd5, #fb923c);
+    margin:0;
+    height:100vh;
+    font-family:sans-serif;
+    background: linear-gradient(135deg,#ffedd5,#fb923c);
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 
-/* BACKGROUND SHAPES */
-.bg-shape {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.2);
-    animation: float 6s infinite ease-in-out;
-}
-
-.bg1 { width:200px; height:200px; top:10%; left:10%; }
-.bg2 { width:300px; height:300px; bottom:10%; right:10%; }
-
-@keyframes float {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
-}
-
-/* HERO */
-.hero {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    color: white;
-    cursor: pointer;
-}
-
-/* LOGIN CARD */
+/* CARD */
 .card {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    width: 340px;
-    padding: 30px;
-    border-radius: 20px;
-    background: rgba(255,255,255,0.25);
-    backdrop-filter: blur(20px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-    transition: 0.5s;
+    width:350px;
+    padding:30px;
+    border-radius:20px;
+    background:white;
+    box-shadow:0 20px 40px rgba(0,0,0,0.2);
+    animation:fadeIn 0.8s ease;
 }
 
-.card.active {
-    transform: translate(-50%, -50%) scale(1);
+@keyframes fadeIn {
+    from {opacity:0; transform:translateY(30px);}
+    to {opacity:1; transform:translateY(0);}
 }
 
 /* INPUT */
 input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 10px;
-    border: none;
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border-radius:10px;
+    border:1px solid #ddd;
 }
 
 /* BUTTON */
 button {
-    width: 100%;
-    padding: 12px;
-    background: linear-gradient(45deg, #ff512f, #dd2476);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
+    width:100%;
+    padding:12px;
+    background:#ea580c;
+    color:white;
+    border:none;
+    border-radius:10px;
 }
 
-.forgot {
-    text-align: right;
-    font-size: 13px;
-    margin-bottom: 10px;
+/* LINK */
+.link {
+    text-align:center;
+    margin-top:10px;
 }
 
 </style>
@@ -89,62 +60,25 @@ button {
 
 <body>
 
-<div class="bg-shape bg1"></div>
-<div class="bg-shape bg2"></div>
+<div class="card">
 
-<!-- HOME BUTTON -->
-<a href="/" style="
-position:absolute;
-top:20px;
-right:20px;
-background:white;
-padding:8px 12px;
-border-radius:8px;
-text-decoration:none;
-">
-🏠 Home
-</a>
+<h3 class="text-center">🚀 Login</h3>
 
-<!-- HERO -->
-<div class="hero" onclick="openLogin()">
-<h1>🚀 PlacementPro</h1>
-<p>Smart Placement Platform</p>
-</div>
+<form method="post">
+{% csrf_token %}
 
-<!-- LOGIN CARD -->
-<div class="card" id="loginCard">
-    <h2>Login</h2>
+<input type="text" name="username" placeholder="Username" required>
+<input type="password" name="password" placeholder="Password" required>
 
-    <form method="post">
-    {% csrf_token %}
+<button type="submit">Login</button>
 
-    {% if messages %}
-        {% for message in messages %}
-            <p style="color:red; text-align:center;">{{ message }}</p>
-        {% endfor %}
-    {% endif %}
-
-    <input type="text" name="username" placeholder="Username" required>
-    <input type="password" name="password" placeholder="Password" required>
-
-    <!-- ✅ FIXED POSITION -->
-    <div class="forgot">
-        <a href="/password-reset/">Forgot Password?</a>
-    </div>
-
-    <button type="submit">Login</button>
-    <p style="text-align:center; margin-top:10px;">
-    New user? <a href="/students/register/">Register here</a>
-</p>
 </form>
 
+<div class="link">
+<a href="/password-reset/">Forgot Password?</a>
 </div>
 
-<script>
-function openLogin() {
-    document.getElementById("loginCard").classList.add("active");
-}
-</script>
+</div>
 
 </body>
 </html>

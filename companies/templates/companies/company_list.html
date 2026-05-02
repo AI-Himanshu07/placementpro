@@ -5,6 +5,15 @@
 
 <h2 class="mb-4">🏢 Companies</h2>
 
+<!-- 🔍 SEARCH BAR -->
+<form method="get" class="mb-4">
+    <input type="text"
+           name="q"
+           placeholder="🔍 Search company..."
+           class="form-control"
+           value="{{ request.GET.q }}">
+</form>
+
 {% for company in companies %}
 
 <div class="card p-4 mb-4 shadow-sm border-0 company-card">
@@ -36,30 +45,23 @@
         </span>
     </p>
 
-    <!-- ✅ FIXED CONDITION -->
     {% if company.jobs.all.count > 0 %}
     <div class="mb-3">
 
-        <!-- BUTTON -->
         <button class="btn btn-outline-dark btn-sm w-100"
                 type="button"
                 data-bs-toggle="collapse"
-                data-bs-target="#jobs{{ company.id }}"
-                aria-expanded="false">
+                data-bs-target="#jobs{{ company.id }}">
             📂 View Jobs
         </button>
 
-        <!-- JOB LIST -->
         <div class="collapse mt-3" id="jobs{{ company.id }}">
             <ul class="list-group">
 
-                <!-- ✅ FIXED LOOP -->
                 {% for job in company.jobs.all %}
                 <li class="list-group-item job-card">
 
-                    <strong class="job-title">
-                        {{ job.title }}
-                    </strong><br>
+                    <strong>{{ job.title }}</strong><br>
 
                     <small class="text-muted">
                         {{ job.description }}
@@ -72,7 +74,6 @@
                         </span>
                     </small><br>
 
-                    <!-- ADMIN APPLY -->
                     {% if user.is_superuser %}
                         <a href="/students/admin-apply-job/{{ job.id }}/"
                            class="btn btn-warning btn-sm mt-2">
@@ -80,7 +81,6 @@
                         </a>
                     {% endif %}
 
-                    <!-- STUDENT APPLY -->
                     {% if user.is_authenticated and student %}
 
                         {% if company.id in applied_companies %}

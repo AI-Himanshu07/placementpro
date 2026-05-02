@@ -18,10 +18,15 @@ def is_staff(user):
 @login_required
 @user_passes_test(is_staff)
 def student_list(request):
+    query = request.GET.get('q')
     students = Student.objects.all()
-    return render(request, 'students/student_list.html', {'students': students})
 
+    if query:
+        students = students.filter(name__icontains=query)
 
+    return render(request, 'students/student_list.html', {
+        'students': students
+    })
 # 🔹 ADD STUDENT
 @login_required
 @user_passes_test(is_staff)

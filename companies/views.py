@@ -11,9 +11,15 @@ def is_staff(user):
     return user.is_staff
 
 
-
 def company_list(request):
+    query = request.GET.get('q')  # 🔍 GET SEARCH
+
     companies = Company.objects.all()
+
+    # ✅ SEARCH FILTER (NEW)
+    if query:
+        companies = companies.filter(name__icontains=query)
+
     applied_companies = []
     student = None
 
@@ -21,7 +27,6 @@ def company_list(request):
         try:
             student = Student.objects.get(user=request.user)
 
-            #  FIX: use company_id (NOT job_id)
             applied_companies = Application.objects.filter(
                 student=student
             ).values_list('company_id', flat=True)
