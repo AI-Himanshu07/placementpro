@@ -1,30 +1,29 @@
 {% extends 'base.html' %}
 {% block content %}
 
-
 <div class="container mt-4">
 
 <h2 class="mb-4">🏢 {{ company.name }} Dashboard</h2>
 
 <!-- CARDS -->
-<div class="row text-center">
+<div class="row text-center g-4">
 
 <div class="col-md-4">
-<div class="card p-4 shadow-sm">
+<div class="card p-4 shadow-sm" style="background:#fff7ed;">
 <h6 class="text-muted">📄 Applications</h6>
 <h2>{{ total_apps|default:0 }}</h2>
 </div>
 </div>
 
 <div class="col-md-4">
-<div class="card p-4 shadow-sm">
+<div class="card p-4 shadow-sm" style="background:#ecfdf5;">
 <h6 class="text-muted">✅ Selected</h6>
 <h2>{{ selected|default:0 }}</h2>
 </div>
 </div>
 
 <div class="col-md-4">
-<div class="card p-4 shadow-sm">
+<div class="card p-4 shadow-sm" style="background:#fef2f2;">
 <h6 class="text-muted">❌ Rejected</h6>
 <h2>{{ rejected|default:0 }}</h2>
 </div>
@@ -32,7 +31,7 @@
 
 </div>
 
-<!-- SAFE DATA -->
+<!-- DATA -->
 <div id="chartData"
      data-total="{{ total_apps|default:0 }}"
      data-selected="{{ selected|default:0 }}"
@@ -40,19 +39,19 @@
 </div>
 
 <!-- CHARTS -->
-<div class="row mt-5">
+<div class="row mt-5 g-4">
 
 <div class="col-md-6">
 <div class="card p-3 shadow-sm">
 <h6 class="text-center">📊 Applications Overview</h6>
-<canvas id="barChart" style="max-height:280px;"></canvas>
+<canvas id="barChart"></canvas>
 </div>
 </div>
 
 <div class="col-md-6">
 <div class="card p-3 shadow-sm">
 <h6 class="text-center">📈 Selection Ratio</h6>
-<canvas id="pieChart" style="max-height:280px;"></canvas>
+<canvas id="pieChart"></canvas>
 </div>
 </div>
 
@@ -70,14 +69,14 @@ const total = parseInt(dataDiv.dataset.total) || 0;
 const selected = parseInt(dataDiv.dataset.selected) || 0;
 const rejected = parseInt(dataDiv.dataset.rejected) || 0;
 
-// BAR CHART
+// BAR
 new Chart(document.getElementById('barChart'), {
     type: 'bar',
     data: {
         labels: ['Total', 'Selected', 'Rejected'],
         datasets: [{
             data: [total, selected, rejected],
-            backgroundColor: ['#3b82f6', '#60a5fa', '#93c5fd']
+            backgroundColor: ['#fb923c', '#16a34a', '#dc2626']
         }]
     },
     options: {
@@ -86,14 +85,14 @@ new Chart(document.getElementById('barChart'), {
     }
 });
 
-// PIE CHART
+// PIE
 new Chart(document.getElementById('pieChart'), {
     type: 'doughnut',
     data: {
         labels: ['Selected', 'Rejected'],
         datasets: [{
             data: [selected, rejected],
-            backgroundColor: ['#10b981', '#ef4444']
+            backgroundColor: ['#16a34a', '#dc2626']
         }]
     },
     options: {

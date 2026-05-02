@@ -85,7 +85,7 @@ body::after {
     border: none;
     background: rgba(255,255,255,0.95);
     backdrop-filter: blur(8px);
-    transition: 0.3s;
+    transition: 0.3s ease ;
 }
 
 .card:hover {
@@ -101,19 +101,75 @@ body::after {
 </style>
 </head>
 
+<script>
+document.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => {
+        document.body.style.opacity = "0.6";
+    });
+});
+</script>
+
 <body>
 
 <!-- 🔥 NAVBAR -->
 <div class="topbar">
+    
+
     <div class="logo">🚀 PlacementPro</div>
 
-    <div>
-        {% if user.is_authenticated %}
-            <a href="/logout/" class="btn btn-danger btn-sm">Logout</a>
-        {% else %}
-            <a href="/login/" class="btn btn-outline-dark btn-sm">Login</a>
-        {% endif %}
-    </div>
+   <div>
+
+    {% if user.is_authenticated %}
+
+        <span class="me-3 fw-bold text-dark">
+            {% if user.is_superuser %}
+                👑 Admin
+            {% elif user.is_staff %}
+                🛠 Staff
+            {% elif user.company %}
+                🏢 {{ user.company.name }}
+            {% else %}
+                🎓 Student
+            {% endif %}
+        </span>
+
+        <a href="/logout/" class="btn btn-danger btn-sm">Logout</a>
+
+    {% else %}
+        <a href="/login/" class="btn btn-primary btn-sm">Login</a>
+    {% endif %}
+</div>
+
+    <div class="d-flex align-items-center gap-2">
+
+    {% if user.is_authenticated %}
+
+        <!-- 🔥 ROLE / NAME DISPLAY -->
+        <span class="badge bg-dark text-white px-3 py-2" style="border-radius:10px;">
+
+            {% if user.is_superuser %}
+                👑 Admin
+
+            {% elif user.is_staff %}
+                🧑‍💼 Staff
+
+            {% elif user.company %}
+                🏢 {{ user.company.name }}
+
+            {% else %}
+                🎓 Student
+            {% endif %}
+
+        </span>
+
+        <!-- LOGOUT -->
+        <a href="/logout/" class="btn btn-danger btn-sm">Logout</a>
+
+    {% else %}
+        <a href="/login/" class="btn btn-primary btn-sm">Login</a>
+    {% endif %}
+
+</div>
 </div>
 
 <div class="content">
@@ -147,6 +203,16 @@ body::after {
 
 </div>
 
+{% endif %}
+
+{% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} shadow-sm">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
 {% endif %}
 
 {% block content %}{% endblock %}

@@ -173,17 +173,45 @@ def student_dashboard(request):
     selected = applications.filter(status='Selected').count()
     rejected = applications.filter(status='Rejected').count()
 
+
+    notes = Notification.objects.all().order_by('-id')[:5]
+
     return render(request, 'students/student_dashboard.html', {
         'student': student,
         'applications': applications,
         'total_apps': total_apps,
         'eligible_companies': eligible_companies,
         'selected': selected,
-        'rejected': rejected
+        'rejected': rejected,
+        'notes': notes   
     })
 
+# 🔥 RESUME ANALYSIS and upload 
 
-# 🔥 RESUME ANALYSIS
+
+@login_required
+def upload_resume(request):
+    student = Student.objects.get(user=request.user)
+
+    if request.method == "POST":
+        student.resume = request.FILES.get('resume')
+        student.save()
+
+    return redirect('/students/dashboard/')
+
+
+@login_required
+def delete_resume(request):
+    student = Student.objects.get(user=request.user)
+
+    if student.resume:
+        student.resume.delete()
+        student.resume = None
+        student.save()
+
+    return redirect('/students/dashboard/')
+
+
 @login_required
 def resume_analysis(request, student_id):
     student = get_object_or_404(Student, id=student_id)
@@ -200,50 +228,50 @@ def resume_analysis(request, student_id):
 
     score = 100
     issues = []
-    good = []
+    good_points = []
 
     # EMAIL
     if re.search(r'\S+@\S+\.\S+', content):
-        good.append("✅ Email detected")
+        good_points.append("✅ Email present")
     else:
         issues.append("❌ Add email")
         score -= 10
 
     # PHONE
     if re.search(r'\d{10}', content):
-        good.append("✅ Phone detected")
+        good_points.append("✅ Phone present")
     else:
         issues.append("❌ Add phone number")
         score -= 10
 
     # SKILLS
-    skills = ["python","django","sql","excel","java","html","css","react"]
+    skills = ["python", "java", "sql", "django", "html", "css", "react"]
     found = [s for s in skills if s in content]
 
     if len(found) >= 5:
-        good.append("🔥 Strong technical skills")
+        good_points.append("🔥 Strong skills section")
     elif len(found) >= 2:
-        issues.append("⚠ Add more skills")
+        issues.append("⚠ Add more technical skills")
         score -= 10
     else:
-        issues.append("❌ No technical skills found")
+        issues.append("❌ No strong skills")
         score -= 20
 
-    # PROJECTS
+    # PROJECT
     if "project" in content:
-        good.append("✅ Projects section found")
+        good_points.append("✅ Projects included")
     else:
-        issues.append("⚠ Add projects section")
+        issues.append("⚠ Add project section")
         score -= 10
 
-    # EDUCATION
-    if "btech" in content or "degree" in content:
-        good.append("✅ Education section found")
+    # EXPERIENCE
+    if "experience" in content or "internship" in content:
+        good_points.append("✅ Experience included")
     else:
-        issues.append("⚠ Add education details")
+        issues.append("⚠ Add experience/internship")
         score -= 10
 
-    # LENGTH CHECK
+    # LENGTH
     if len(content) < 500:
         issues.append("⚠ Resume too short")
         score -= 10
@@ -254,8 +282,9 @@ def resume_analysis(request, student_id):
     return render(request, 'students/resume_result.html', {
         'score': score,
         'issues': issues,
-        'good_points': good
+        'good_points': good_points
     })
+
 
 
 # 🔹 DOWNLOAD EXCEL
@@ -279,13 +308,20 @@ def download_students(request):
 # 🔹 APPLY JOB
 @login_required
 def apply_job(request, job_id):
-    student = Student.objects.filter(user=request.user).first()
-    job = get_object_or_404(Job, id=job_id)
+    from .models import Student, Application
+    from companies.models import Job
 
-    if not student:
-        return redirect('/')
+    student = Student.objects.get(user=request.user)
+    job = Job.objects.get(id=job_id)
 
+    # ✅ Prevent duplicate
     if Application.objects.filter(student=student, company=job.company).exists():
+        messages.warning(request, "Already applied to this company")
+        return redirect('/companies/')
+
+    # ✅ CGPA check
+    if student.cgpa < job.min_cgpa:
+        messages.error(request, "You are not eligible")
         return redirect('/companies/')
 
     Application.objects.create(
@@ -294,7 +330,8 @@ def apply_job(request, job_id):
         status="Pending"
     )
 
-    return redirect('/companies/')
+    messages.success(request, "Application submitted successfully")
+    return redirect('/students/applications/')
 
 
 # 🔹 ADMIN APPLY JOB
@@ -343,9 +380,13 @@ def add_notification(request):
 
 @login_required
 def view_notifications(request):
-    notes = Notification.objects.all().order_by('-id')
-    return render(request, 'students/notifications.html', {'notes': notes})
+    from .models import Notification
 
+    notes = Notification.objects.all().order_by('-id')
+
+    return render(request, 'students/notifications.html', {
+        'notes': notes
+    })
 
 @login_required
 def delete_notification(request, id):
@@ -354,3 +395,37 @@ def delete_notification(request, id):
 
     Notification.objects.filter(id=id).delete()
     return redirect('/students/notifications/')
+
+
+def register_student(request):
+
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        email = request.POST.get("email")
+        name = request.POST.get("name")
+
+        # check user exists
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists")
+            return render(request, "students/register.html")
+
+        # create user
+        user = User.objects.create_user(
+            username=username,
+            password=password,
+            email=email
+        )
+
+        # create student profile
+        Student.objects.create(
+            user=user,
+            name=name,
+            email=email,
+            cgpa=0
+        )
+
+        messages.success(request, "Account created successfully")
+        return redirect('/login/')
+
+    return render(request, "students/register.html")

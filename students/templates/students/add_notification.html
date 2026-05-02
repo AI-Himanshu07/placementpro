@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="container mt-5">
-    <h3>🔔 Send Notification</h3>
+<div class="container mt-4">
 
-    <form method="POST">
-        {% csrf_token %}
+<h3>Add Notification</h3>
 
-        <textarea name="message"
-                  class="form-control mb-3"
-                  placeholder="Write notification..."
-                  required></textarea>
+<form method="post">
+    {% csrf_token %}
 
-        <button class="btn btn-dark">Send</button>
-    </form>
+    <textarea name="message" class="form-control mb-3"
+              placeholder="Enter message..." required></textarea>
+
+    <button class="btn btn-primary">Send Notification</button>
+</form>
+
 </div>
 
 {% endblock %}

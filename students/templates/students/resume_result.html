@@ -1,51 +1,83 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="container mt-5">
+<div class="container mt-4">
 
-<div class="card p-4 text-center">
+<h2 class="mb-4">📄 Resume Analysis</h2>
 
-    {% if error %}
-        <h4 class="text-danger">{{ error }}</h4>
-    {% else %}
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% else %}
 
-        <h3>📊 Resume Score</h3>
+<!-- SCORE -->
+<div class="card p-4 shadow-sm mb-4 text-center">
+    <h5>Overall Score</h5>
+    <h1 style="font-size:50px;">{{ score }}%</h1>
 
-        <!-- BIG SCORE -->
-        <h1 style="font-size:60px; color:#fb923c;">
-            {{ score }}/100
-        </h1>
+    <div class="progress mt-3" style="height: 20px;">
+        <div class="progress-bar bg-success" id="scoreBar">
+            {{ score }}%
+        </div>
+    </div>
+</div>
 
-        <hr>
+<!-- SKILL SCORE -->
+<div class="card p-4 shadow-sm mb-4">
+    <h5>🧠 Skill Strength</h5>
 
-        <!-- GOOD POINTS -->
-        <h5 class="text-success">✅ Good Points</h5>
+    <div class="progress mt-2" style="height: 18px;">
+        <div class="progress-bar bg-info" id="skillBar">
+            {{ skill_score }}%
+        </div>
+    </div>
 
-        {% if good_points %}
-            {% for g in good_points %}
-                <p>{{ g }}</p>
-            {% endfor %}
-        {% else %}
-            <p>No strong points found</p>
-        {% endif %}
+    <p class="mt-3">
+        <strong>Detected Skills:</strong>
+        {% for skill in skills_found %}
+            <span class="badge bg-dark">{{ skill }}</span>
+        {% empty %}
+            <span class="text-muted">No skills detected</span>
+        {% endfor %}
+    </p>
+</div>
 
-        <hr>
+<!-- GOOD POINTS -->
+<div class="card p-4 shadow-sm mb-4">
+    <h5>✅ Strengths</h5>
+    <ul>
+        {% for g in good_points %}
+            <li>{{ g }}</li>
+        {% empty %}
+            <li>No strong points found</li>
+        {% endfor %}
+    </ul>
+</div>
 
-        <!-- ISSUES -->
-        <h5 class="text-danger">⚠ Improvements</h5>
+<!-- ISSUES -->
+<div class="card p-4 shadow-sm">
+    <h5>❌ Improvements</h5>
+    <ul>
+        {% for i in issues %}
+            <li>{{ i }}</li>
+        {% empty %}
+            <li>No issues found</li>
+        {% endfor %}
+    </ul>
+</div>
 
-        {% if issues %}
-            {% for i in issues %}
-                <p>{{ i }}</p>
-            {% endfor %}
-        {% else %}
-            <p>No issues 🎉</p>
-        {% endif %}
-
-    {% endif %}
+{% endif %}
 
 </div>
 
-</div>
+<!-- JS FIX FOR WIDTH -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    let score = "{{ score|default:0 }}";
+    let skill = "{{ skill_score|default:0 }}";
+
+    document.getElementById("scoreBar").style.width = score + "%";
+    document.getElementById("skillBar").style.width = skill + "%";
+});
+</script>
 
 {% endblock %}

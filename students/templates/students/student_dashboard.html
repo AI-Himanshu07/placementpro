@@ -1,31 +1,29 @@
 {% extends 'base.html' %}
 {% block content %}
 
-
-
 <div class="container">
 
 <h2 class="mb-4">🎓 Student Dashboard</h2>
 
 <!-- 🔹 CARDS -->
-<div class="row text-center">
+<div class="row text-center g-4">
 
 <div class="col-md-4">
-<div class="card p-4 shadow-sm">
+<div class="card p-4 shadow-sm" style="background:#fff7ed;">
 <h6 class="text-muted">📄 Applications</h6>
 <h2>{{ total_apps|default:0 }}</h2>
 </div>
 </div>
 
 <div class="col-md-4">
-<div class="card p-4 shadow-sm">
+<div class="card p-4 shadow-sm" style="background:#ecfeff;">
 <h6 class="text-muted">📊 CGPA</h6>
 <h2>{{ student.cgpa }}</h2>
 </div>
 </div>
 
 <div class="col-md-4">
-<div class="card p-4 shadow-sm">
+<div class="card p-4 shadow-sm" style="background:#f0fdf4;">
 <h6 class="text-muted">🏢 Eligible Companies</h6>
 <h2>{{ eligible_companies|default:0 }}</h2>
 </div>
@@ -33,7 +31,31 @@
 
 </div>
 
-<!-- 🔹 SAFE DATA -->
+<!-- 🔥 RESUME SECTION (NEW) -->
+<div class="card mt-4 p-4 shadow-sm">
+<h5 class="mb-3">📄 My Resume</h5>
+
+{% if student.resume %}
+    <a href="{{ student.resume.url }}" target="_blank" class="btn btn-primary btn-sm">
+        👀 View Resume
+    </a>
+
+    <a href="/students/delete-resume/" class="btn btn-danger btn-sm">
+        ❌ Delete
+    </a>
+{% else %}
+    <p class="text-muted">No resume uploaded</p>
+{% endif %}
+
+<form method="post" enctype="multipart/form-data" action="/students/upload-resume/" class="mt-3">
+    {% csrf_token %}
+    <input type="file" name="resume" class="form-control mb-2" required>
+    <button class="btn btn-success btn-sm">⬆ Upload / Replace Resume</button>
+</form>
+
+</div>
+
+<!-- 🔹 DATA -->
 <div id="chartData"
      data-total="{{ total_apps|default:0 }}"
      data-eligible="{{ eligible_companies|default:0 }}"
@@ -42,7 +64,7 @@
 </div>
 
 <!-- 🔹 CHARTS -->
-<div class="row mt-5">
+<div class="row mt-5 g-4">
 
 <div class="col-md-4">
 <div class="card p-3 shadow-sm">
@@ -71,8 +93,8 @@
 <div class="card mt-5 p-4 shadow-sm">
 <h5 class="mb-3">📄 My Applications</h5>
 
-<table class="table table-hover">
-<thead>
+<table class="table table-hover align-middle">
+<thead class="table-light">
 <tr>
 <th>Company</th>
 <th>Status</th>
@@ -90,19 +112,33 @@
 {% elif app.status == "Rejected" %}
 <span class="badge bg-danger">Rejected</span>
 {% else %}
-<span class="badge bg-warning">Pending</span>
+<span class="badge bg-warning text-dark">Pending</span>
 {% endif %}
 </td>
 
 </tr>
 {% empty %}
 <tr>
-<td colspan="2">No applications yet</td>
+<td colspan="2" class="text-center text-muted">No applications yet</td>
 </tr>
 {% endfor %}
 </tbody>
 
 </table>
+
+</div>
+
+<!-- 🔔 NOTIFICATIONS (NEW) -->
+<div class="card mt-4 p-4 shadow-sm">
+<h5 class="mb-3">🔔 Notifications</h5>
+
+{% for note in notes %}
+    <div class="alert alert-light border mb-2">
+        {{ note.message }}
+    </div>
+{% empty %}
+    <p class="text-muted">No notifications</p>
+{% endfor %}
 
 </div>
 
@@ -121,39 +157,39 @@ const rejected = parseInt(dataDiv.dataset.rejected) || 0;
 
 const remaining = eligible - totalApps > 0 ? eligible - totalApps : 0;
 
-// 🔵 Doughnut
+// Doughnut
 new Chart(document.getElementById('appChart'), {
     type: 'doughnut',
     data: {
         labels: ['Applied', 'Remaining'],
         datasets: [{
             data: [totalApps, remaining],
-            backgroundColor: ['#3b82f6', '#93c5fd']
+            backgroundColor: ['#f97316', '#fdba74']
         }]
     }
 });
 
-// 🔵 Bar
+// Bar
 new Chart(document.getElementById('barChart'), {
     type: 'bar',
     data: {
         labels: ['Applications', 'Eligible'],
         datasets: [{
             data: [totalApps, eligible],
-            backgroundColor: ['#3b82f6', '#60a5fa']
+            backgroundColor: ['#ea580c', '#fb923c']
         }]
     },
     options: { scales: { y: { beginAtZero: true } } }
 });
 
-// 🔵 Result Graph (NEW)
+// Result
 new Chart(document.getElementById('resultChart'), {
     type: 'doughnut',
     data: {
         labels: ['Selected', 'Rejected'],
         datasets: [{
             data: [selected, rejected],
-            backgroundColor: ['#3b82f6', '#93c5fd']
+            backgroundColor: ['#16a34a', '#dc2626']
         }]
     }
 });

@@ -9,59 +9,44 @@ from django.contrib import messages
 # 🔐 LOGIN
 def login_view(request):
 
-    # already logged in users
     if request.user.is_authenticated:
+        if request.user.is_superuser or request.user.is_staff:
+            return redirect('/dashboard/')
 
-        try:
-            if request.user.is_superuser or request.user.is_staff:
-                return redirect('/dashboard/')
+        if Company.objects.filter(user=request.user).exists():
+            return redirect('/companies/dashboard/')
 
-            if Company.objects.filter(user=request.user).exists():
-                return redirect('/companies/dashboard/')
-
-            if Student.objects.filter(user=request.user).exists():
-                return redirect('/students/dashboard/')
-
-        except Exception:
-            return redirect('/')
-
-    if request.method == "POST":
-        try:
-            username = request.POST.get("username", "").strip()
-            password = request.POST.get("password", "").strip()
-
-            # prevent empty crash
-            if not username or not password:
-                messages.error(request, "Please fill all fields")
-                return render(request, "login.html")
-
-            user = authenticate(request, username=username, password=password)
-
-            # WRONG LOGIN (SAFE)
-            if user is None:
-                messages.error(request, "Invalid username or password")
-                return render(request, "login.html")
-
-            # LOGIN SUCCESS
-            login(request, user)
-
-            if user.is_superuser or user.is_staff:
-                return redirect('/dashboard/')
-
-            try:
-                if Company.objects.filter(user=user).exists():
-                    return redirect('/companies/dashboard/')
-            except:
-                pass
-
+        if Student.objects.filter(user=request.user).exists():
             return redirect('/students/dashboard/')
 
-        except Exception as e:
-            # THIS PREVENTS 500 COMPLETELY
-            messages.error(request, "Something went wrong. Please try again.")
+        return redirect('/')
+
+    if request.method == "POST":
+        username = request.POST.get("username", "").strip()
+        password = request.POST.get("password", "").strip()
+
+        if not username or not password:
+            messages.error(request, "Please fill all fields")
             return render(request, "login.html")
 
+        user = authenticate(request, username=username, password=password)
+
+        if user is None:
+            messages.error(request, "Invalid username or password")
+            return render(request, "login.html")
+
+        login(request, user)
+
+        if user.is_superuser or user.is_staff:
+            return redirect('/dashboard/')
+
+        if Company.objects.filter(user=user).exists():
+            return redirect('/companies/dashboard/')
+
+        return redirect('/students/dashboard/')
+
     return render(request, "login.html")
+
 
 # 📊 DASHBOARD
 @login_required
@@ -78,7 +63,7 @@ def dashboard(request):
         pending = Application.objects.filter(status='Pending').count()
 
         return render(request, 'dashboard.html', {
-            'students': students,        # ✅ FIXED (removed .count())
+            'students': students,
             'companies': companies,
             'applications': applications,
             'selected': selected,
@@ -98,7 +83,7 @@ def dashboard(request):
 # 🚪 LOGOUT
 def logout_view(request):
     logout(request)
-    return redirect('/login/')   
+    return redirect('/login/')
 
 
 # 🏠 HOME

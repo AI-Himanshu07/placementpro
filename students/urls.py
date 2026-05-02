@@ -6,12 +6,13 @@ urlpatterns = [
     path('add/', views.add_student),
     path('edit/<int:id>/', views.edit_student),
     path('delete/<int:id>/', views.delete_student),
+    path('upload-resume/', views.upload_resume),
 
     path('dashboard/', views.student_dashboard),
     path('applications/', views.applications),
     path('apply/<int:company_id>/', views.apply_company),
     path('cancel/<int:id>/', views.cancel_application),
-
+    path('delete-resume/<int:student_id>/', views.delete_resume),
     path('download/', views.download_students),
     path('resume/<int:student_id>/', views.resume_analysis),
     path('admin-apply-job/<int:job_id>/', views.admin_apply_job),
@@ -19,5 +20,5 @@ urlpatterns = [
     path('add-notification/', views.add_notification),
     path('delete-notification/<int:id>/', views.delete_notification),
     path('apply-job/<int:job_id>/', views.apply_job),
-    
+    path('register/', views.register_student),
 ]
