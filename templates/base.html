@@ -131,31 +131,30 @@ animation:spin 1s linear infinite;
 
 <div class="topbar">
     <div class="logo">🚀 PlacementPro</div>
+<div class="d-flex align-items-center gap-2">
 
-    <div class="d-flex align-items-center">
+{% if user.is_authenticated %}
 
-        {% if user.is_authenticated %}
+    <span class="badge bg-dark">
 
-            <!-- ✅ ROLE NAME -->
-            <div class="user-info">
-                {% if user.is_superuser %}
-                    Admin
-                {% elif user.is_staff %}
-                    Staff
-                {% elif user.company %}
-                    {{ user.company.name }}
-                {% else %}
-                    Student
-                {% endif %}
-            </div>
-
-            <a href="/logout/" class="btn btn-danger btn-sm">Logout</a>
-
+        {% if user.is_superuser %}
+            👑 Admin
+        {% elif user.is_staff %}
+            🧑‍💼 Staff
+        {% elif user.company %}
+            🏢 {{ user.company.name }}
         {% else %}
-            <a href="/login/" class="btn btn-primary btn-sm">Login</a>
+            🎓 Student
         {% endif %}
 
-    </div>
+    </span>
+
+    <a href="/logout/" class="btn btn-danger btn-sm">Logout</a>
+
+{% else %}
+    <a href="/login/" class="btn btn-primary btn-sm">Login</a>
+{% endif %}
+
 </div>
 
 <div class="content">

@@ -3,69 +3,86 @@
 
 <div class="container text-center mt-5">
 
-<h1 class="fw-bold">🚀 PlacementPro</h1>
+<h1 class="mb-3">🚀 PlacementPro</h1>
 
 <p class="text-muted fs-5">
-Smart SaaS platform for managing student placements efficiently
+A modern placement management platform designed to connect students, companies, and institutions in one seamless system.
 </p>
 
-{% if not user.is_authenticated %}
-<a href="/login/" class="btn btn-warning mt-3 px-4">Get Started</a>
-{% endif %}
+<a href="/login/" class="btn btn-dark mt-3 px-4 py-2">🔐 Login</a>
 
 </div>
 
-<!-- FEATURES -->
+<!-- HERO DETAILS -->
 <div class="container mt-5">
-<div class="row text-center g-4">
+<div class="row text-center">
 
 <div class="col-md-4">
-<div class="card p-4 shadow-sm">
-<h5>📊 Smart Dashboard</h5>
-<p class="text-muted">Track all placement data in one place</p>
-</div>
-</div>
-
-<div class="col-md-4">
-<div class="card p-4 shadow-sm">
-<h5>🏢 Company Hiring</h5>
-<p class="text-muted">Companies post jobs & hire students easily</p>
+<div class="card p-4">
+<h5>🎯 Smart Tracking</h5>
+<p class="text-muted">
+Track applications, results, and progress in real-time with powerful dashboards.
+</p>
 </div>
 </div>
 
 <div class="col-md-4">
-<div class="card p-4 shadow-sm">
-<h5>📄 Resume AI</h5>
-<p class="text-muted">Analyze resumes with smart scoring system</p>
+<div class="card p-4">
+<h5>⚡ Fast & Simple</h5>
+<p class="text-muted">
+Clean UI with quick access to everything — no confusion, just results.
+</p>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card p-4">
+<h5>🔐 Secure System</h5>
+<p class="text-muted">
+Role-based access for students, companies, and admins.
+</p>
 </div>
 </div>
 
 </div>
 </div>
 
-<!-- HOW -->
+<!-- WHY SECTION -->
 <div class="container mt-5">
-<h3 class="text-center mb-4">⚙️ How It Works</h3>
+<h3 class="text-center mb-4">Why PlacementPro?</h3>
 
-<div class="row text-center g-4">
+<div class="row text-center">
 
-<div class="col-md-4">
-<div class="card p-3">1️⃣ Register</div>
-</div>
-
-<div class="col-md-4">
-<div class="card p-3">2️⃣ Apply Jobs</div>
-</div>
-
-<div class="col-md-4">
-<div class="card p-3">3️⃣ Get Placed 🎉</div>
-</div>
-
+<div class="col-md-3">
+<div class="card p-3">
+<p>📊 Real-time dashboards</p>
 </div>
 </div>
 
-<div class="text-center mt-5 text-muted">
-© 2026 PlacementPro
+<div class="col-md-3">
+<div class="card p-3">
+<p>📄 Resume analysis</p>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card p-3">
+<p>🏢 Company integration</p>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card p-3">
+<p>🔍 Smart search system</p>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- FOOTER -->
+<div class="container text-center mt-5 mb-4">
+<p class="text-muted">© 2026 PlacementPro • Built for modern placements</p>
 </div>
 
 {% endblock %}
