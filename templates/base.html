@@ -11,7 +11,35 @@
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #fff7ed, #fed7aa);
+    background: white;
+}
+
+/* TOP WHITE AREA */
+.top-section {
+    background: linear-gradient(to bottom, #ffffff, #f0f9ff);
+    padding-bottom: 80px;
+    position: relative;
+}
+
+/* WAVE */
+.wave {
+    position: absolute;
+    bottom: -1px;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+}
+
+.wave svg {
+    display: block;
+    width: 100%;
+    height: 80px;
+}
+
+/* BOTTOM ORANGE AREA */
+.bottom-section {
+    background: linear-gradient(135deg, #fed7aa, #fdba74);
+    padding: 40px 0;
 }
 
 /* NAVBAR */
@@ -19,9 +47,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 30px;
-    background: white;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    padding: 15px 40px;
+    background: transparent;
 }
 
 .logo {
@@ -37,9 +64,8 @@ body {
     gap: 10px;
 }
 
-/* ROLE BADGE */
 .role-badge {
-    background: #ea580c;
+    background: #fb923c;
     color: white;
     padding: 5px 10px;
     border-radius: 8px;
@@ -48,7 +74,7 @@ body {
 
 /* CONTENT */
 .content {
-    padding: 25px;
+    padding: 30px;
 }
 
 /* MENU */
@@ -72,7 +98,7 @@ body {
 
 .menu-card:hover {
     transform: translateY(-5px);
-    background: #ea580c;
+    background: #fb923c;
     color: white;
 }
 
@@ -84,13 +110,15 @@ body {
 
 .card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.1);
 }
 
 </style>
 </head>
 
 <body>
+
+<div class="top-section">
 
 <!-- NAVBAR -->
 <div class="topbar">
@@ -150,6 +178,22 @@ body {
 
 {% block content %}{% endblock %}
 
+</div>
+
+<!-- 🌊 WAVE -->
+<div class="wave">
+<svg viewBox="0 0 1440 320">
+<path fill="#fdba74"
+d="M0,192L80,186.7C160,181,320,171,480,181.3C640,192,800,224,960,218.7C1120,213,1280,171,1360,149.3L1440,128V320H0Z">
+</path>
+</svg>
+</div>
+
+</div>
+
+<!-- ORANGE FOOTER -->
+<div class="bottom-section text-center">
+<p class="text-white">© 2026 PlacementPro</p>
 </div>
 
 </body>
