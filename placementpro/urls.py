@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.urls import path, include
-from .views import login_view, dashboard, logout_view
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -10,18 +9,15 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # 🔹 MAIN ROUTES (same as yours)
     path('', views.home),
-    path('login/', login_view),
-    path('dashboard/', dashboard),
-    path('logout/', logout_view, name='logout'),
+    path('login/', views.login_view),
+    path('dashboard/', views.dashboard),
+    path('logout/', views.logout_view, name='logout'),
 
-    # 🔹 APPS
     path('students/', include('students.urls')),
     path('companies/', include('companies.urls')),
-    
 
-    # 🔥 FORGOT PASSWORD FLOW (NEW)
+    # 🔐 PASSWORD RESET
     path('password-reset/',
          auth_views.PasswordResetView.as_view(
              template_name='registration/password_reset.html'
@@ -46,4 +42,6 @@ urlpatterns = [
          ),
          name='password_reset_complete'),
 ]
+
+
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

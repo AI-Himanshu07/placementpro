@@ -10,15 +10,9 @@ body {
     font-family: Arial;
     overflow: hidden;
     background: linear-gradient(135deg, #ffedd5, #fb923c);
-
 }
 
-/* DARK MODE */
-body.dark {
-    background: linear-gradient(135deg, #141e30, #243b55);
-}
-
-/* BACKGROUND CIRCLES */
+/* BACKGROUND SHAPES */
 .bg-shape {
     position: absolute;
     border-radius: 50%;
@@ -43,14 +37,6 @@ body.dark {
     text-align: center;
     color: white;
     cursor: pointer;
-}
-
-.hero h1 {
-    font-size: 48px;
-}
-
-.hero p {
-    font-size: 18px;
 }
 
 /* LOGIN CARD */
@@ -92,55 +78,40 @@ button {
     cursor: pointer;
 }
 
-/* TOGGLE */
-.toggle {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    cursor: pointer;
-    font-size: 22px;
+.forgot {
+    text-align: right;
+    font-size: 13px;
+    margin-bottom: 10px;
 }
+
 </style>
 </head>
 
 <body>
 
-<!-- BACKGROUND SHAPES -->
 <div class="bg-shape bg1"></div>
 <div class="bg-shape bg2"></div>
 
-<!-- DARK MODE -->
+<!-- HOME BUTTON -->
 <a href="/" style="
 position:absolute;
 top:20px;
 right:20px;
-font-size:18px;
-text-decoration:none;
 background:white;
 padding:8px 12px;
 border-radius:8px;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
+text-decoration:none;
 ">
 🏠 Home
 </a>
 
 <!-- HERO -->
 <div class="hero" onclick="openLogin()">
-<h1 style="font-size:50px;">🚀 PlacementPro</h1>
-
-<p style="font-size:20px;">
-Smart Placement Platform
-</p>
-
-<p style="color:#444; font-size:16px;">
-Connecting students and opportunities with intelligent tracking.
-<br>
-Simple. Fast. Effective.
-</p>
+<h1>🚀 PlacementPro</h1>
+<p>Smart Placement Platform</p>
 </div>
 
 <!-- LOGIN CARD -->
- <a href="/password-reset/">Forgot Password?</a>
 <div class="card" id="loginCard">
     <h2>Login</h2>
 
@@ -149,40 +120,27 @@ Simple. Fast. Effective.
 
     {% if messages %}
         {% for message in messages %}
-            <p style="color:red; text-align:center; margin:5px 0;">
-                {{ message }}
-            </p>
+            <p style="color:red; text-align:center;">{{ message }}</p>
         {% endfor %}
     {% endif %}
 
     <input type="text" name="username" placeholder="Username" required>
     <input type="password" name="password" placeholder="Password" required>
 
+    <!-- ✅ FIXED POSITION -->
+    <div class="forgot">
+        <a href="/password-reset/">Forgot Password?</a>
+    </div>
+
     <button type="submit">Login</button>
 </form>
+
 </div>
 
 <script>
-  document.addEventListener("mousemove", (e) => {
-    const card = document.getElementById("loginCard");
-
-    let x = (window.innerWidth / 2 - e.pageX) / 25;
-    let y = (window.innerHeight / 2 - e.pageY) / 25;
-
-    card.style.transform =
-        `translate(-50%, -50%) scale(1) rotateY(${x}deg) rotateX(${y}deg)`;
-});
-
-/* OPEN LOGIN */
 function openLogin() {
     document.getElementById("loginCard").classList.add("active");
 }
-
-/* DARK MODE */
-function toggleMode() {
-    document.body.classList.toggle("dark");
-}
-
 </script>
 
 </body>

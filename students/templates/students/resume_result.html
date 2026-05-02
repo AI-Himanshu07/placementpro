@@ -1,29 +1,50 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="card p-4 shadow">
+<div class="container mt-5">
 
-<h2>📄 Resume Analysis</h2>
+<div class="card p-4 text-center">
 
-<h3 class="text-primary">Score: {{ score }}/100</h3>
+    {% if error %}
+        <h4 class="text-danger">{{ error }}</h4>
+    {% else %}
 
-<hr>
+        <h3>📊 Resume Score</h3>
 
-<h4>✅ Good Points</h4>
-<ul>
-{% for g in good_points %}
-<li>{{ g }}</li>
-{% endfor %}
-</ul>
+        <!-- BIG SCORE -->
+        <h1 style="font-size:60px; color:#fb923c;">
+            {{ score }}/100
+        </h1>
 
-<h4>⚠ Issues</h4>
-<ul>
-{% for i in issues %}
-<li>{{ i }}</li>
-{% endfor %}
-</ul>
+        <hr>
 
+        <!-- GOOD POINTS -->
+        <h5 class="text-success">✅ Good Points</h5>
 
+        {% if good_points %}
+            {% for g in good_points %}
+                <p>{{ g }}</p>
+            {% endfor %}
+        {% else %}
+            <p>No strong points found</p>
+        {% endif %}
+
+        <hr>
+
+        <!-- ISSUES -->
+        <h5 class="text-danger">⚠ Improvements</h5>
+
+        {% if issues %}
+            {% for i in issues %}
+                <p>{{ i }}</p>
+            {% endfor %}
+        {% else %}
+            <p>No issues 🎉</p>
+        {% endif %}
+
+    {% endif %}
+
+</div>
 
 </div>
 

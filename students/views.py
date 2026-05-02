@@ -200,34 +200,52 @@ def resume_analysis(request, student_id):
 
     score = 100
     issues = []
-    good_points = []
+    good = []
 
+    # EMAIL
     if re.search(r'\S+@\S+\.\S+', content):
-        good_points.append("✅ Email found")
+        good.append("✅ Email detected")
     else:
-        issues.append("❌ Missing email")
+        issues.append("❌ Add email")
         score -= 10
 
+    # PHONE
     if re.search(r'\d{10}', content):
-        good_points.append("✅ Phone number found")
+        good.append("✅ Phone detected")
     else:
-        issues.append("❌ Missing phone")
+        issues.append("❌ Add phone number")
         score -= 10
 
-    skills = ["python", "sql", "django", "excel", "java", "html", "css"]
+    # SKILLS
+    skills = ["python","django","sql","excel","java","html","css","react"]
     found = [s for s in skills if s in content]
 
-    if len(found) >= 4:
-        good_points.append("🔥 Strong skill section")
-    elif len(found) > 0:
+    if len(found) >= 5:
+        good.append("🔥 Strong technical skills")
+    elif len(found) >= 2:
         issues.append("⚠ Add more skills")
         score -= 10
     else:
-        issues.append("❌ No skills detected")
+        issues.append("❌ No technical skills found")
         score -= 20
 
-    if "project" not in content:
-        issues.append("⚠ Add projects")
+    # PROJECTS
+    if "project" in content:
+        good.append("✅ Projects section found")
+    else:
+        issues.append("⚠ Add projects section")
+        score -= 10
+
+    # EDUCATION
+    if "btech" in content or "degree" in content:
+        good.append("✅ Education section found")
+    else:
+        issues.append("⚠ Add education details")
+        score -= 10
+
+    # LENGTH CHECK
+    if len(content) < 500:
+        issues.append("⚠ Resume too short")
         score -= 10
 
     if score < 0:
@@ -236,7 +254,7 @@ def resume_analysis(request, student_id):
     return render(request, 'students/resume_result.html', {
         'score': score,
         'issues': issues,
-        'good_points': good_points
+        'good_points': good
     })
 
 

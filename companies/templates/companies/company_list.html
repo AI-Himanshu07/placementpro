@@ -36,14 +36,16 @@
         </span>
     </p>
 
-    {% if company.jobs.exists %}
+    <!-- ✅ FIXED CONDITION -->
+    {% if company.jobs.all.count > 0 %}
     <div class="mb-3">
 
         <!-- BUTTON -->
-        <button class="btn btn-outline-dark btn-sm w-100 view-job-btn"
+        <button class="btn btn-outline-dark btn-sm w-100"
                 type="button"
                 data-bs-toggle="collapse"
-                data-bs-target="#jobs{{ company.id }}">
+                data-bs-target="#jobs{{ company.id }}"
+                aria-expanded="false">
             📂 View Jobs
         </button>
 
@@ -51,6 +53,7 @@
         <div class="collapse mt-3" id="jobs{{ company.id }}">
             <ul class="list-group">
 
+                <!-- ✅ FIXED LOOP -->
                 {% for job in company.jobs.all %}
                 <li class="list-group-item job-card">
 
