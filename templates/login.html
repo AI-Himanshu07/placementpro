@@ -4,15 +4,15 @@
 <title>Login - PlacementPro</title>
 
 <style>
+
 body {
     margin: 0;
     height: 100vh;
     font-family: Arial;
-    overflow: hidden;
     background: linear-gradient(135deg, #fff7ed, #fb923c);
 }
 
-/* WELCOME SCREEN */
+/* WELCOME */
 .welcome {
     position: absolute;
     width: 100%;
@@ -29,39 +29,52 @@ body {
     font-size:50px;
 }
 
-/* LOGIN CARD */
+/* CARD */
 .card {
     position:absolute;
     top:50%;
     left:50%;
     transform:translate(-50%,-50%) scale(0);
+
     width:340px;
     padding:30px;
     border-radius:20px;
-    background:rgba(255,255,255,0.3);
-    backdrop-filter:blur(15px);
-    transition:0.5s;
+
+    background: linear-gradient(135deg, #dc2626, #7f1d1d);
+    color:white;
+
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+
+    transition:0.4s;
 }
 
 .card.active {
     transform:translate(-50%,-50%) scale(1);
 }
 
+/* INPUT */
 input {
     width:100%;
-    padding:12px;
+    padding:10px;
     margin:10px 0;
-    border-radius:10px;
     border:none;
+    border-radius:8px;
+    background: rgba(255,255,255,0.2);
+    color:white;
 }
 
+input::placeholder {
+    color:#fca5a5;
+}
+
+/* BUTTON */
 button {
     width:100%;
-    padding:12px;
-    background:#ea580c;
-    color:white;
+    padding:10px;
     border:none;
-    border-radius:10px;
+    border-radius:8px;
+    background:black;
+    color:white;
 }
 
 /* LINKS */
@@ -72,12 +85,13 @@ button {
 
 .links a {
     display:block;
+    color:#ffe4e6;
+    font-size:14px;
     margin-top:5px;
     text-decoration:none;
-    font-size:14px;
 }
 
-/* HOME BUTTON */
+/* HOME BTN */
 .home-btn {
     position:absolute;
     top:20px;
@@ -87,6 +101,7 @@ button {
     border-radius:8px;
     text-decoration:none;
 }
+
 </style>
 </head>
 
@@ -97,7 +112,7 @@ button {
 <!-- WELCOME -->
 <div class="welcome" onclick="openLogin()">
 <h1>🚀 PlacementPro</h1>
-<p>Click anywhere to continue</p>
+<p>Welcome — Click to Login</p>
 </div>
 
 <!-- LOGIN -->
@@ -110,7 +125,7 @@ button {
 
 {% if messages %}
 {% for message in messages %}
-<p style="color:red;text-align:center;">{{ message }}</p>
+<p style="color:#ffd1d1;text-align:center;">{{ message }}</p>
 {% endfor %}
 {% endif %}
 
@@ -134,14 +149,14 @@ function openLogin(){
     document.getElementById("loginCard").classList.add("active");
 }
 
-// 3D EFFECT
+/* 3D EFFECT */
 document.addEventListener("mousemove",(e)=>{
     const card=document.getElementById("loginCard");
 
-    let x=(window.innerWidth/2 - e.pageX)/25;
-    let y=(window.innerHeight/2 - e.pageY)/25;
+    let x=(window.innerWidth/2 - e.pageX)/30;
+    let y=(window.innerHeight/2 - e.pageY)/30;
 
-    card.style.transform=
+    card.style.transform =
     `translate(-50%,-50%) scale(1) rotateY(${x}deg) rotateX(${y}deg)`;
 });
 

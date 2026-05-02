@@ -1,40 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>PlacementPro</title>
+<title>PlacementPro</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
 
-/* CARD ANIMATION */
-.card {
-    border-radius: 16px;
-    transition: all 0.3s ease;
-    animation: fadeUp 0.6s ease;
-}
-
-.card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-}
-
-/* ENTRY ANIMATION */
-@keyframes fadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+/* BODY */
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(135deg, #fff7ed, #fed7aa);
-    min-height: 100vh;
 }
 
 /* NAVBAR */
@@ -42,9 +19,9 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 30px;
+    padding: 12px 30px;
     background: white;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
 .logo {
@@ -53,16 +30,25 @@ body {
     color: #ea580c;
 }
 
-/* RIGHT USER */
-.user-info {
-    font-size: 14px;
-    margin-right: 10px;
-    color: #555;
+/* RIGHT SIDE */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ROLE BADGE */
+.role-badge {
+    background: #ea580c;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 13px;
 }
 
 /* CONTENT */
 .content {
-    padding: 30px;
+    padding: 25px;
 }
 
 /* MENU */
@@ -89,71 +75,51 @@ body {
     background: #ea580c;
     color: white;
 }
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+
+/* CARD */
+.card {
+    border-radius: 16px;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
 }
 
 </style>
 </head>
 
-<script>
-window.addEventListener("load", function(){
-    document.getElementById("loader").style.display = "none";
-});
-</script>
-
 <body>
 
-
-    <!-- ⏳ LOADER -->
-<div id="loader" style="
-position:fixed;
-width:100%;
-height:100%;
-background:white;
-z-index:9999;
-display:flex;
-justify-content:center;
-align-items:center;
-">
-
-<div style="
-width:50px;
-height:50px;
-border:5px solid #fed7aa;
-border-top:5px solid #ea580c;
-border-radius:50%;
-animation:spin 1s linear infinite;
-"></div>
-
-</div>
-
+<!-- NAVBAR -->
 <div class="topbar">
+
     <div class="logo">🚀 PlacementPro</div>
-<div class="d-flex align-items-center gap-2">
 
-{% if user.is_authenticated %}
+    <div class="nav-right">
 
-    <span class="badge bg-dark">
+        {% if user.is_authenticated %}
 
-        {% if user.is_superuser %}
-            👑 Admin
-        {% elif user.is_staff %}
-            🧑‍💼 Staff
-        {% elif user.company %}
-            🏢 {{ user.company.name }}
+            <span class="role-badge">
+                {% if user.is_superuser %}
+                    👑 Admin
+                {% elif user.is_staff %}
+                    🧑‍💼 Staff
+                {% elif user.company %}
+                    🏢 {{ user.company.name }}
+                {% else %}
+                    🎓 Student
+                {% endif %}
+            </span>
+
+            <a href="/logout/" class="btn btn-danger btn-sm">Logout</a>
+
         {% else %}
-            🎓 Student
+            <a href="/login/" class="btn btn-dark btn-sm">Login</a>
         {% endif %}
 
-    </span>
-
-    <a href="/logout/" class="btn btn-danger btn-sm">Logout</a>
-
-{% else %}
-    <a href="/login/" class="btn btn-primary btn-sm">Login</a>
-{% endif %}
+    </div>
 
 </div>
 
@@ -181,29 +147,6 @@ animation:spin 1s linear infinite;
 </div>
 
 {% endif %}
-
-
-<!-- 🔔 TOAST NOTIFICATIONS -->
-<div class="toast-container position-fixed top-0 end-0 p-3">
-
-{% if messages %}
-    {% for message in messages %}
-    
-    <div class="toast show align-items-center text-white bg-primary border-0 mb-2">
-        <div class="d-flex">
-            <div class="toast-body">
-                {{ message }}
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                onclick="this.parentElement.parentElement.remove()">
-            </button>
-        </div>
-    </div>
-
-    {% endfor %}
-{% endif %}
-
-</div>
 
 {% block content %}{% endblock %}
 
