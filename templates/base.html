@@ -11,120 +11,71 @@ body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
     min-height: 100vh;
-    position: relative;
     overflow-x: hidden;
 }
 
-/* ☁️ TOP WHITE + CLOUD AREA */
+/* ☁️ TOP (65%) */
 .bg-top {
     position: fixed;
     top: 0;
-    left: 0;
     width: 100%;
-    height: 50%;
+    height: 65%;
     background: #ffffff;
     z-index: -3;
 }
 
-/* ☁️ LIGHT CLOUDS */
+/* CLOUD EFFECT */
 .bg-top::before {
     content: "";
     position: absolute;
     width: 100%;
     height: 100%;
     background:
-        radial-gradient(circle at 20% 30%, rgba(147,197,253,0.25) 0 40px, transparent 41px),
-        radial-gradient(circle at 60% 20%, rgba(147,197,253,0.2) 0 60px, transparent 61px),
-        radial-gradient(circle at 80% 40%, rgba(147,197,253,0.18) 0 50px, transparent 51px);
+        radial-gradient(circle at 20% 30%, rgba(147,197,253,0.25) 0 50px, transparent 51px),
+        radial-gradient(circle at 60% 20%, rgba(147,197,253,0.2) 0 70px, transparent 71px),
+        radial-gradient(circle at 80% 40%, rgba(147,197,253,0.18) 0 60px, transparent 61px);
 }
 
-/* 🔴 BOTTOM RED AREA */
+/* 🔴 BOTTOM (35%) */
 .bg-bottom {
     position: fixed;
     bottom: 0;
-    left: 0;
     width: 100%;
-    height: 50%;
+    height: 35%;
     background: linear-gradient(135deg, #fecaca, #fb923c);
     z-index: -3;
 }
 
-/* 🌊 WAVE SEPARATOR */
+/* 🌊 WAVE */
 .wave {
     position: fixed;
-    top: 45%;
-    left: 0;
+    top: 60%;
     width: 100%;
     z-index: -2;
 }
 
 .wave svg {
     width: 100%;
-    height: 120px;
-    display: block;
+    height: 140px;
 }
 
-/* NAVBAR */
-.topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 40px;
-}
-
-.logo {
-    font-weight: bold;
-    font-size: 20px;
-    color: #ea580c;
-}
-
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.role-badge {
-    background: #fb923c;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 8px;
-    font-size: 13px;
-}
-
-/* CONTENT ALWAYS ABOVE BACKGROUND */
+/* CONTENT */
 .content {
     position: relative;
     z-index: 2;
     padding: 30px;
 }
 
-/* CARDS */
-.card {
-    border-radius: 16px;
+/* NAVBAR */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 40px;
 }
 
-/* MENU GRID */
-.menu-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 20px;
-}
-
-.menu-card {
-    background: white;
-    padding: 25px;
-    border-radius: 16px;
-    text-align: center;
-    transition: 0.3s;
-    text-decoration: none;
-    color: black;
-}
-
-.menu-card:hover {
-    transform: translateY(-5px);
-    background: #fb923c;
-    color: white;
+.logo {
+    font-weight: bold;
+    color: #ea580c;
 }
 
 </style>
@@ -132,34 +83,21 @@ body {
 
 <body>
 
-<!-- 🌈 GLOBAL BACKGROUND -->
 <div class="bg-top"></div>
 <div class="bg-bottom"></div>
 
-<!-- 🌊 WAVE -->
 <div class="wave">
 <svg viewBox="0 0 1440 320">
 <path fill="#fb923c"
-d="M0,192L80,186.7C160,181,320,171,480,181.3C640,192,800,224,960,218.7C1120,213,1280,171,1360,149.3L1440,128V320H0Z">
+d="M0,160C200,220,400,100,700,160C1000,220,1200,140,1440,180L1440,320L0,320Z">
 </path>
 </svg>
 </div>
 
-<!-- NAVBAR -->
 <div class="topbar">
-    <div class="logo">🚀 PlacementPro</div>
-
-    <div class="nav-right">
-        {% if user.is_authenticated %}
-            <span class="role-badge">Dashboard</span>
-            <a href="/logout/" class="btn btn-danger btn-sm">Logout</a>
-        {% else %}
-            <a href="/login/" class="btn btn-dark btn-sm">Login</a>
-        {% endif %}
-    </div>
+<div class="logo">🚀 PlacementPro</div>
 </div>
 
-<!-- CONTENT -->
 <div class="content">
 {% block content %}{% endblock %}
 </div>
