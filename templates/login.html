@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +11,43 @@ body {
     margin: 0;
     height: 100vh;
     font-family: Arial;
-    background: linear-gradient(135deg, #fff7ed, #fb923c);
+
+    /* sky top + orange bottom feel */
+    background: linear-gradient(to bottom,
+        #dbeafe 0%,
+        #dbeafe 45%,
+        #fdba74 55%,
+        #fb923c 100%);
+    overflow: hidden;
+}
+
+/* ☁️ CLOUDS */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 45%;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.9) 0 20px, transparent 21px),
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,0.8) 0 25px, transparent 26px),
+        radial-gradient(circle at 70% 35%, rgba(255,255,255,0.85) 0 22px, transparent 23px),
+        radial-gradient(circle at 90% 25%, rgba(255,255,255,0.7) 0 18px, transparent 19px);
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+/* 🌊 WAVE DIVIDER */
+.wave {
+    position: absolute;
+    top: 42%;
+    width: 100%;
+}
+
+.wave svg {
+    width: 100%;
+    height: 80px;
+    display: block;
 }
 
 /* WELCOME */
@@ -21,18 +59,19 @@ body {
     align-items:center;
     justify-content:center;
     flex-direction:column;
-    color:white;
+    color:#1e3a8a;
     cursor:pointer;
+    z-index:2;
 }
 
 .welcome h1 {
     font-size:50px;
 }
 
-/* CARD */
+/* 🔴 LOGIN CARD (soft red glow) */
 .card {
     position:absolute;
-    top:50%;
+    top:55%;
     left:50%;
     transform:translate(-50%,-50%) scale(0);
 
@@ -40,12 +79,13 @@ body {
     padding:30px;
     border-radius:20px;
 
-    background: white;
-    color:black;
+    background: rgba(255, 240, 240, 0.95);
+    color:#7f1d1d;
 
-    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    box-shadow: 0 20px 60px rgba(220,38,38,0.25);
 
     transition:0.4s;
+    z-index:3;
 }
 
 .card.active {
@@ -59,19 +99,23 @@ input {
     margin:10px 0;
     border:none;
     border-radius:8px;
-    background: rgba(255,255,255,0.2);
-    color:white;
+    background: rgba(255,255,255,0.7);
 }
 
 input::placeholder {
-    color:#fca5a5;
+    color:#ef4444;
 }
 
 /* BUTTON */
 button {
-    background: #ea580c;
-    color: white;
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    background:#dc2626;
+    color:white;
 }
+
 /* LINKS */
 .links {
     text-align:center;
@@ -80,7 +124,7 @@ button {
 
 .links a {
     display:block;
-    color:#ffe4e6;
+    color:#7f1d1d;
     font-size:14px;
     margin-top:5px;
     text-decoration:none;
@@ -95,6 +139,7 @@ button {
     padding:8px 12px;
     border-radius:8px;
     text-decoration:none;
+    z-index:4;
 }
 
 </style>
@@ -104,13 +149,22 @@ button {
 
 <a href="/" class="home-btn">🏠 Home</a>
 
-<!-- WELCOME -->
+<!-- ☁️ WELCOME -->
 <div class="welcome" onclick="openLogin()">
 <h1>🚀 PlacementPro</h1>
 <p>Welcome — Click to Login</p>
 </div>
 
-<!-- LOGIN -->
+<!-- 🌊 WAVE -->
+<div class="wave">
+<svg viewBox="0 0 1440 320">
+<path fill="#fdba74"
+d="M0,192L80,186.7C160,181,320,171,480,181.3C640,192,800,224,960,218.7C1120,213,1280,171,1360,149.3L1440,128V320H0Z">
+</path>
+</svg>
+</div>
+
+<!-- LOGIN CARD -->
 <div class="card" id="loginCard">
 
 <h2>Login</h2>
@@ -120,7 +174,7 @@ button {
 
 {% if messages %}
 {% for message in messages %}
-<p style="color:#ffd1d1;text-align:center;">{{ message }}</p>
+<p style="text-align:center;">{{ message }}</p>
 {% endfor %}
 {% endif %}
 
