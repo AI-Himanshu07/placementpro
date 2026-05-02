@@ -14,27 +14,27 @@ body {
     overflow-x: hidden;
 }
 
-/* 🌤 TOP SOFT SKY */
+/* 🌤 TOP */
 .bg-top {
     position: fixed;
     top: 0;
     width: 100%;
     height: 70%;
-    background: linear-gradient(to bottom, #f8fafc, #e0f2fe);
+    background: linear-gradient(to bottom, #f8fafc, #dbeafe);
     z-index: -3;
 }
 
-/* 🌸 BOTTOM SOFT PINK */
+/* 🔵 BOTTOM */
 .bg-bottom {
     position: fixed;
     bottom: 0;
     width: 100%;
     height: 40%;
-    background: linear-gradient(135deg, #fce7f3, #fbcfe8);
+    background: linear-gradient(135deg, #c7d2fe, #a5b4fc);
     z-index: -3;
 }
 
-/* 🌊 SMOOTH WAVE */
+/* 🌊 WAVE */
 .wave {
     position: fixed;
     top: 60%;
@@ -47,7 +47,7 @@ body {
     height: 180px;
 }
 
-/* SECOND WAVE (SOFT DEPTH) */
+/* SECOND WAVE */
 .wave2 {
     position: fixed;
     top: 63%;
@@ -61,7 +61,7 @@ body {
     height: 160px;
 }
 
-/* KEEP YOUR ORIGINAL STRUCTURE */
+/* KEEP STRUCTURE */
 .topbar {
     display: flex;
     justify-content: space-between;
@@ -70,7 +70,7 @@ body {
 
 .logo {
     font-weight: bold;
-    color: #64748b;
+    color: #4f46e5;
 }
 
 .content {
@@ -84,14 +84,13 @@ body {
 
 <body>
 
-<!-- BACKGROUND -->
 <div class="bg-top"></div>
 <div class="bg-bottom"></div>
 
 <!-- 🌊 WAVES -->
 <div class="wave">
 <svg viewBox="0 0 1440 320">
-<path fill="#fbcfe8"
+<path fill="#c7d2fe"
 d="M0,224C200,180,400,260,700,200C1000,140,1200,220,1440,200L1440,320L0,320Z">
 </path>
 </svg>
@@ -99,13 +98,13 @@ d="M0,224C200,180,400,260,700,200C1000,140,1200,220,1440,200L1440,320L0,320Z">
 
 <div class="wave2">
 <svg viewBox="0 0 1440 320">
-<path fill="#f9a8d4"
+<path fill="#a5b4fc"
 d="M0,260C200,220,400,300,700,240C1000,180,1200,260,1440,240L1440,320L0,320Z">
 </path>
 </svg>
 </div>
 
-<!-- YOUR NAVBAR (UNCHANGED) -->
+<!-- NAVBAR -->
 <div class="topbar">
 
     <div class="logo">🚀 PlacementPro</div>
