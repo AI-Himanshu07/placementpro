@@ -12,33 +12,32 @@ body {
     font-family: Arial;
 }
 
-/* SAME BACKGROUND */
+/* BACKGROUND SAME AS BASE */
 .bg-top {
     position: absolute;
     width: 100%;
-    height: 68%;
-    background: white;
+    height: 50%;
+    background: #ffffff;
 }
 
 .bg-bottom {
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 42%;
-    background: linear-gradient(135deg, #bbf7d0, #86efac);
+    height: 50%;
+    background: linear-gradient(135deg, #d1fae5, #86efac);
 }
 
+/* 🌊 WAVE */
 .wave {
     position: absolute;
-    top: 55%;
+    top: 48%;
     width: 100%;
 }
 
-.wave2 {
-    position: absolute;
-    top: 58%;
+.wave svg {
     width: 100%;
-    opacity: 0.6;
+    height: 220px;
 }
 
 /* HOME BUTTON */
@@ -64,7 +63,20 @@ body {
     cursor:pointer;
 }
 
-/* CARD (NO WHITE — SOFT GREEN GLASS LOOK) */
+.welcome h1 {
+    color: black;
+}
+
+.welcome p {
+    color: #374151;
+}
+
+.click {
+    margin-top:10px;
+    color:black;
+}
+
+/* 💎 CARD (PREMIUM LOOK) */
 .card {
     position:absolute;
     top:55%;
@@ -75,12 +87,13 @@ body {
     padding:30px;
     border-radius:22px;
 
-    background: rgba(255,255,255,0.4);
-    backdrop-filter: blur(12px);
+    /* soft glass green */
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(15px);
 
-    box-shadow:0 25px 60px rgba(0,0,0,0.2);
+    box-shadow:0 30px 80px rgba(0,0,0,0.25);
 
-    transition:0.4s;
+    transition:0.4s ease;
 }
 
 .card.active {
@@ -107,7 +120,7 @@ button {
     border-radius:8px;
 }
 
-/* LINKS (RESTORED) */
+/* LINKS */
 .links {
     text-align:center;
     margin-top:10px;
@@ -116,7 +129,6 @@ button {
 .links a {
     display:block;
     color:#065f46;
-    font-size:14px;
     text-decoration:none;
 }
 
@@ -133,15 +145,7 @@ button {
 <div class="wave">
 <svg viewBox="0 0 1440 320">
 <path fill="#86efac"
-d="M0,160C200,300,400,80,700,180C1000,280,1200,120,1440,200L1440,320L0,320Z">
-</path>
-</svg>
-</div>
-
-<div class="wave2">
-<svg viewBox="0 0 1440 320">
-<path fill="#4ade80"
-d="M0,200C200,320,400,120,700,220C1000,300,1200,180,1440,240L1440,320L0,320Z">
+d="M0,160C200,280,400,60,700,160C1000,260,1200,100,1440,180L1440,320L0,320Z">
 </path>
 </svg>
 </div>
@@ -149,7 +153,8 @@ d="M0,200C200,320,400,120,700,220C1000,300,1200,180,1440,240L1440,320L0,320Z">
 <!-- WELCOME -->
 <div class="welcome" onclick="openLogin()">
 <h1>🚀 PlacementPro</h1>
-<p>Click anywhere to login</p>
+<p>Manage placements easily</p>
+<div class="click">Click anywhere to login</div>
 </div>
 
 <!-- CARD -->
@@ -159,8 +164,9 @@ d="M0,200C200,320,400,120,700,220C1000,300,1200,180,1440,240L1440,320L0,320Z">
 
 <form method="post">
 {% csrf_token %}
-<input type="text" name="username" placeholder="Username">
-<input type="password" name="password" placeholder="Password">
+<input type="text" name="username" placeholder="Username" required>
+<input type="password" name="password" placeholder="Password" required>
+
 <button type="submit">Login</button>
 </form>
 
@@ -173,21 +179,23 @@ d="M0,200C200,320,400,120,700,220C1000,300,1200,180,1440,240L1440,320L0,320Z">
 
 <script>
 
+/* SHOW CARD */
 function openLogin(){
-document.querySelector(".welcome").style.display="none";
-document.getElementById("card").classList.add("active");
+    document.querySelector(".welcome").style.display="none";
+    document.getElementById("card").classList.add("active");
 }
 
+/* 🔥 FULL 3D MOVEMENT */
 document.addEventListener("mousemove",(e)=>{
-const card=document.getElementById("card");
+    const card = document.getElementById("card");
 
-if(!card.classList.contains("active")) return;
+    if(!card.classList.contains("active")) return;
 
-let x=(window.innerWidth/2 - e.pageX)/30;
-let y=(window.innerHeight/2 - e.pageY)/30;
+    let x = (window.innerWidth/2 - e.pageX) / 20;
+    let y = (window.innerHeight/2 - e.pageY) / 20;
 
-card.style.transform =
-`translate(-50%,-50%) scale(1) rotateY(${x}deg) rotateX(${y}deg)`;
+    card.style.transform =
+    `translate(-50%,-50%) scale(1) rotateY(${x}deg) rotateX(${y}deg)`;
 });
 
 </script>

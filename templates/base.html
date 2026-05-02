@@ -10,34 +10,32 @@
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
 }
 
-/* TOP WHITE */
+/* TOP */
 .bg-top {
     position: fixed;
     top: 0;
     width: 100%;
-    height: 68%;
+    height: 50%;
     background: #ffffff;
     z-index: -3;
 }
 
-/* LIGHT GREEN */
+/* BOTTOM */
 .bg-bottom {
     position: fixed;
     bottom: 0;
     width: 100%;
-    height: 42%;
-    background: linear-gradient(135deg, #bbf7d0, #86efac);
+    height: 50%;
+    background: linear-gradient(135deg, #d1fae5, #86efac);
     z-index: -3;
 }
 
-/* 🌊 STRONG CURVED WAVE (FIXED) */
+/* 🌊 REAL SEPARATOR (OVERLAPS BOTH) */
 .wave {
     position: fixed;
-    top: 55%;
+    top: 48%; /* 🔥 THIS FIXES STRAIGHT LINE */
     width: 100%;
     z-index: -2;
 }
@@ -45,23 +43,9 @@ body {
 .wave svg {
     width: 100%;
     height: 220px;
+    display: block;
 }
 
-/* SECOND WAVE FOR DEPTH */
-.wave2 {
-    position: fixed;
-    top: 58%;
-    width: 100%;
-    opacity: 0.6;
-    z-index: -1;
-}
-
-.wave2 svg {
-    width: 100%;
-    height: 200px;
-}
-
-/* KEEP YOUR STRUCTURE */
 .topbar {
     display: flex;
     justify-content: space-between;
@@ -70,7 +54,7 @@ body {
 
 .logo {
     font-weight: bold;
-    color: #059669;
+    color: #065f46;
 }
 
 .content {
@@ -87,26 +71,16 @@ body {
 <div class="bg-top"></div>
 <div class="bg-bottom"></div>
 
-<!-- WAVE -->
+<!-- 🌊 WAVE (NOW ACTUAL SEPARATOR) -->
 <div class="wave">
 <svg viewBox="0 0 1440 320">
 <path fill="#86efac"
-d="M0,160C200,300,400,80,700,180C1000,280,1200,120,1440,200L1440,320L0,320Z">
+d="M0,160C200,280,400,60,700,160C1000,260,1200,100,1440,180L1440,320L0,320Z">
 </path>
 </svg>
 </div>
 
-<div class="wave2">
-<svg viewBox="0 0 1440 320">
-<path fill="#4ade80"
-d="M0,200C200,320,400,120,700,220C1000,300,1200,180,1440,240L1440,320L0,320Z">
-</path>
-</svg>
-</div>
-
-<!-- NAVBAR (UNCHANGED) -->
 <div class="topbar">
-
 <div class="logo">🚀 PlacementPro</div>
 
 <div>
