@@ -70,7 +70,6 @@ body {
     padding: 10px;
     border-radius: 8px;
     margin-bottom: 8px;
-    transition: 0.3s;
 }
 
 .sidebar a:hover {
@@ -92,23 +91,11 @@ body {
     margin-bottom: 20px;
 }
 
-/* ROLE */
 .role-badge {
     background: #2563eb;
     color: white;
     padding: 5px 10px;
     border-radius: 8px;
-}
-
-/* CARD */
-.card {
-    border-radius: 16px;
-    transition: 0.3s;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
 }
 
 </style>
@@ -127,25 +114,13 @@ d="M0,160C200,280,400,60,700,160C1000,260,1200,100,1440,180L1440,320L0,320Z">
 </svg>
 </div>
 
-<!-- 🔥 CONDITION: HOME PAGE (NO SIDEBAR) -->
-{% if request.path == "/" %}
-
-<div class="main">
-
-<div class="topbar">
-<a href="/login/" class="btn btn-dark btn-sm">Login</a>
-</div>
-
-{% block content %}{% endblock %}
-
-</div>
-
-{% else %}
-
-<!-- 🔥 DASHBOARD WITH SIDEBAR -->
+<!-- 🔥 CONDITIONAL LAYOUT -->
+{% if request.path != "/" %}
 <div class="layout">
+{% endif %}
 
-<!-- SIDEBAR -->
+<!-- SIDEBAR (NOT ON HOME) -->
+{% if request.path != "/" %}
 <div class="sidebar">
 
 <h4>🚀 PlacementPro</h4>
@@ -179,6 +154,7 @@ d="M0,160C200,280,400,60,700,160C1000,260,1200,100,1440,180L1440,320L0,320Z">
 {% endif %}
 
 </div>
+{% endif %}
 
 <!-- MAIN -->
 <div class="main">
@@ -186,16 +162,11 @@ d="M0,160C200,280,400,60,700,160C1000,260,1200,100,1440,180L1440,320L0,320Z">
 <div class="topbar">
 
 {% if user.is_authenticated %}
-
 <span class="role-badge">
-    {% if user.is_superuser %}
-        👑 Admin
-    {% elif user.is_staff %}
-        🧑‍💼 Staff
-    {% elif user.company %}
-        🏢 Company
-    {% else %}
-        🎓 Student
+    {% if user.is_superuser %} 👑 Admin
+    {% elif user.is_staff %} 🧑‍💼 Staff
+    {% elif user.company %} 🏢 Company
+    {% else %} 🎓 Student
     {% endif %}
 </span>
 
@@ -207,12 +178,13 @@ d="M0,160C200,280,400,60,700,160C1000,260,1200,100,1440,180L1440,320L0,320Z">
 
 </div>
 
+<!-- ✅ ONLY ONE BLOCK HERE -->
 {% block content %}{% endblock %}
 
 </div>
 
+{% if request.path != "/" %}
 </div>
-
 {% endif %}
 
 </body>
