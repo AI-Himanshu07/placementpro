@@ -32,10 +32,10 @@ body {
     z-index: -3;
 }
 
-/* 🌊 REAL SEPARATOR (OVERLAPS BOTH) */
+/* 🌊 WAVE */
 .wave {
     position: fixed;
-    top: 48%; /* 🔥 THIS FIXES STRAIGHT LINE */
+    top: 48%;
     width: 100%;
     z-index: -2;
 }
@@ -46,10 +46,12 @@ body {
     display: block;
 }
 
+/* NAVBAR */
 .topbar {
     display: flex;
     justify-content: space-between;
     padding: 15px 40px;
+    align-items: center;
 }
 
 .logo {
@@ -57,6 +59,23 @@ body {
     color: #065f46;
 }
 
+/* RIGHT SIDE */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ROLE BADGE */
+.role-badge {
+    background: #10b981;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+/* CONTENT */
 .content {
     position: relative;
     z-index: 2;
@@ -71,7 +90,7 @@ body {
 <div class="bg-top"></div>
 <div class="bg-bottom"></div>
 
-<!-- 🌊 WAVE (NOW ACTUAL SEPARATOR) -->
+<!-- 🌊 WAVE -->
 <div class="wave">
 <svg viewBox="0 0 1440 320">
 <path fill="#86efac"
@@ -80,19 +99,50 @@ d="M0,160C200,280,400,60,700,160C1000,260,1200,100,1440,180L1440,320L0,320Z">
 </svg>
 </div>
 
+<!-- 🔥 NAVBAR -->
 <div class="topbar">
+
 <div class="logo">🚀 PlacementPro</div>
 
-<div>
+<div class="nav-right">
+
 {% if user.is_authenticated %}
-<a href="/logout/" class="btn btn-danger btn-sm">Logout</a>
+
+    <!-- ROLE -->
+    <span class="role-badge">
+        {% if user.is_superuser %}
+            👑 Admin
+        {% elif user.is_staff %}
+            🧑‍💼 Staff
+        {% elif user.company %}
+            🏢 {{ user.company.name }}
+        {% else %}
+            🎓 Student
+        {% endif %}
+    </span>
+
+    <!-- 🔔 NOTIFICATION (VISIBLE TO STUDENT + STAFF) -->
+    {% if not user.is_superuser %}
+        <a href="/students/notifications/" class="btn btn-warning btn-sm">🔔</a>
+    {% endif %}
+
+    <!-- ⚙️ ADMIN BUTTON -->
+    {% if user.is_superuser %}
+        <a href="/secure-admin/" class="btn btn-dark btn-sm">⚙️ Admin</a>
+    {% endif %}
+
+    <!-- LOGOUT -->
+    <a href="/logout/" class="btn btn-danger btn-sm">Logout</a>
+
 {% else %}
-<a href="/login/" class="btn btn-dark btn-sm">Login</a>
+    <a href="/login/" class="btn btn-dark btn-sm">Login</a>
 {% endif %}
-</div>
 
 </div>
 
+</div>
+
+<!-- CONTENT -->
 <div class="content">
 {% block content %}{% endblock %}
 </div>

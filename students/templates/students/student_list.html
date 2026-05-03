@@ -31,6 +31,14 @@
 
 <tbody>
 {% for student in students %}
+
+{% if student.resume %}
+<a href="/students/view-resume/{{ student.id }}/" 
+   class="btn btn-info btn-sm">
+   View Resume
+</a>
+{% endif %}
+
 <tr>
 <td>{{ student.name }}</td>
 <td>{{ student.email }}</td>

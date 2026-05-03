@@ -7,6 +7,7 @@ from django.contrib import messages
 from .models import Student, Application, Notification
 from companies.models import Company, Job
 from django.contrib.auth.models import User
+from django.http import FileResponse
 
 
 # 🔹 STAFF CHECK
@@ -192,6 +193,16 @@ def student_dashboard(request):
     })
 
 # 🔥 RESUME ANALYSIS and upload 
+
+
+@login_required
+def view_resume(request, id):
+    student = get_object_or_404(Student, id=id)
+
+    if student.resume:
+        return FileResponse(student.resume.open(), content_type='application/pdf')
+
+    return redirect('/')
 
 
 @login_required

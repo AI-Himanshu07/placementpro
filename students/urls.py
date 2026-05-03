@@ -7,7 +7,7 @@ urlpatterns = [
     path('edit/<int:id>/', views.edit_student),
     path('delete/<int:id>/', views.delete_student),
     path('upload-resume/', views.upload_resume),
-
+    path('view-resume/<int:id>/', views.view_resume, name='view_resume'),
     path('dashboard/', views.student_dashboard),
     path('applications/', views.applications),
     path('apply/<int:company_id>/', views.apply_company),

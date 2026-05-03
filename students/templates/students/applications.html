@@ -18,6 +18,17 @@
 
 <tbody>
 {% for app in applications %}
+
+
+{% if app.student.resume %}
+<a href="/students/view-resume/{{ app.student.id }}/" 
+   class="btn btn-info btn-sm">
+   📄 View Resume
+</a>
+{% else %}
+<span class="text-muted">No Resume</span>
+{% endif %}
+
 <tr>
     <td>{{ app.student.name }}</td>
     <td>{{ app.company.name }}</td>

@@ -34,6 +34,7 @@ path('reset/<uidb64>/<token>/',
 path('reset/done/', 
      auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'), 
      name='password_reset_complete'),
+path('secure-admin/', views.secure_admin, name='secure_admin'),     
 ]
 
 

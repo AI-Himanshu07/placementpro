@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from students.models import Student, Application
 from companies.models import Company
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
 
 
 # 🔐 LOGIN
@@ -101,3 +102,19 @@ def home(request):
             return redirect('/students/dashboard/')
 
     return render(request, 'home.html')
+
+def is_admin(user):
+    return user.is_superuser
+
+@user_passes_test(is_admin)
+def secure_admin(request):
+
+    if request.method == "POST":
+        password = request.POST.get("password")
+
+        if request.user.check_password(password):
+            return redirect('/admin/')
+        else:
+            return render(request, "secure_admin.html", {"error": "Wrong password"})
+
+    return render(request, "secure_admin.html")

@@ -1,0 +1,18 @@
+<div class="container mt-5 text-center">
+
+<h3>🔐 Admin Verification</h3>
+
+<form method="post">
+{% csrf_token %}
+
+<input type="password" name="password" placeholder="Enter Admin Password" class="form-control mt-3">
+
+<button class="btn btn-dark mt-3">Verify</button>
+
+</form>
+
+{% if error %}
+<p class="text-danger mt-2">{{ error }}</p>
+{% endif %}
+
+</div>
