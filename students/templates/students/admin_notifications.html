@@ -1,0 +1,28 @@
+<div class="container mt-5">
+
+<h3>🔔 Send Notification</h3>
+
+<form method="post">
+{% csrf_token %}
+<textarea name="message" class="form-control" placeholder="Enter message"></textarea>
+<button class="btn btn-dark mt-2">Send</button>
+</form>
+
+<hr>
+
+<h4>All Notifications</h4>
+
+{% for n in notifications %}
+<div class="card p-3 mb-2">
+    {{ n.message }}
+
+    <a href="/students/delete-notification/{{ n.id }}/"
+       class="btn btn-danger btn-sm mt-2">
+       Delete
+    </a>
+</div>
+{% empty %}
+<p>No notifications</p>
+{% endfor %}
+
+</div>

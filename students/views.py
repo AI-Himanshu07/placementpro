@@ -404,13 +404,7 @@ def view_notifications(request):
         'notes': notes
     })
 
-@login_required
-def delete_notification(request, id):
-    if not request.user.is_superuser:
-        return redirect('/students/notifications/')
 
-    Notification.objects.filter(id=id).delete()
-    return redirect('/students/notifications/')
 
 
 def register_student(request):
@@ -445,3 +439,34 @@ def register_student(request):
         return redirect('/login/')
 
     return render(request, "students/register.html")
+
+
+
+def is_admin(user):
+    return user.is_superuser
+
+@user_passes_test(is_admin)
+def admin_notifications(request):
+
+    if request.method == "POST":
+        message = request.POST.get("message")
+        if message:
+            Notification.objects.create(message=message)
+
+    notifications = Notification.objects.all().order_by('-created_at')
+
+    return render(request, "students/admin_notifications.html", {
+        "notifications": notifications
+    })
+
+
+@user_passes_test(is_admin)
+def delete_notification(request, id):
+    note = Notification.objects.get(id=id)
+    note.delete()
+    return redirect('/admin-notifications/')
+
+@login_required
+def student_notifications(request):
+    notes = Notification.objects.all().order_by('-created_at')
+    return render(request, "students/notifications.html", {"notes": notes})

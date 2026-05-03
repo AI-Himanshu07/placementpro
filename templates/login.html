@@ -10,7 +10,21 @@ body {
     height: 100vh;
     overflow: hidden;
     font-family: Arial;
+    background: linear-gradient(to bottom, #ffffff, #e0f2fe);
 }
+
+/* WAVE BG */
+body::after {
+    content:"";
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:50%;
+    background: linear-gradient(135deg, #7dd3fc, #38bdf8);
+    border-top-left-radius:50% 20%;
+    border-top-right-radius:50% 20%;
+}
+
 
 /* BACKGROUND SAME AS BASE */
 .bg-top {
@@ -79,21 +93,18 @@ body {
 /* 💎 CARD (PREMIUM LOOK) */
 .card {
     position:absolute;
-    top:55%;
+    top:50%;
     left:50%;
     transform:translate(-50%,-50%) scale(0);
-
     width:340px;
     padding:30px;
-    border-radius:22px;
+    border-radius:20px;
 
-    /* soft glass green */
-    background: rgba(255,255,255,0.6);
-    backdrop-filter: blur(15px);
+    background: white;
+    color:black;
 
-    box-shadow:0 30px 80px rgba(0,0,0,0.25);
-
-    transition:0.4s ease;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+    transition:0.5s;
 }
 
 .card.active {
@@ -102,12 +113,8 @@ body {
 
 /* INPUT */
 input {
-    width:100%;
-    padding:10px;
-    margin:10px 0;
-    border-radius:8px;
-    border:none;
-    background:white;
+    background:#f1f5f9;
+    color:black;
 }
 
 /* BUTTON */
@@ -187,12 +194,12 @@ function openLogin(){
 
 /* 🔥 FULL 3D MOVEMENT */
 document.addEventListener("mousemove",(e)=>{
-    const card = document.getElementById("card");
+    const card=document.getElementById("loginCard");
 
     if(!card.classList.contains("active")) return;
 
-    let x = (window.innerWidth/2 - e.pageX) / 20;
-    let y = (window.innerHeight/2 - e.pageY) / 20;
+    let x=(window.innerWidth/2 - e.pageX)/40;
+    let y=(window.innerHeight/2 - e.pageY)/40;
 
     card.style.transform =
     `translate(-50%,-50%) scale(1) rotateY(${x}deg) rotateX(${y}deg)`;

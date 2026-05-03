@@ -23,27 +23,29 @@ body {
 }
 
 /* BOTTOM */
+/* TOP */
+.bg-top {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to bottom, #ffffff, #e0f2fe);
+    z-index: -3;
+}
+
+/* BOTTOM */
 .bg-bottom {
     position: fixed;
     bottom: 0;
     width: 100%;
     height: 50%;
-    background: linear-gradient(135deg, #d1fae5, #86efac);
+    background: linear-gradient(135deg, #bae6fd, #7dd3fc);
     z-index: -3;
 }
 
-/* 🌊 WAVE */
-.wave {
-    position: fixed;
-    top: 48%;
-    width: 100%;
-    z-index: -2;
-}
-
-.wave svg {
-    width: 100%;
-    height: 220px;
-    display: block;
+/* 🌊 SMOOTH WAVE */
+.wave svg path {
+    fill: #7dd3fc;
 }
 
 /* NAVBAR */
@@ -100,6 +102,11 @@ d="M0,160C200,280,400,60,700,160C1000,260,1200,100,1440,180L1440,320L0,320Z">
 </div>
 
 <!-- 🔥 NAVBAR -->
+
+
+{% if user.is_superuser %}
+<a href="/students/admin-notifications/" class="btn btn-warning btn-sm">🔔 Manage</a>
+{% endif %}
 <div class="topbar">
 
 <div class="logo">🚀 PlacementPro</div>
