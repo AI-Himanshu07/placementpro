@@ -13,7 +13,7 @@ body {
     overflow-x: hidden;
 }
 
-/* TOP BG */
+/* BACKGROUND */
 .bg-top {
     position: fixed;
     top: 0;
@@ -23,7 +23,6 @@ body {
     z-index: -3;
 }
 
-/* BOTTOM BG */
 .bg-bottom {
     position: fixed;
     bottom: 0;
@@ -33,7 +32,7 @@ body {
     z-index: -3;
 }
 
-/* 🌊 WAVE FIX (NO STRAIGHT LINE) */
+/* 🌊 WAVE */
 .wave {
     position: fixed;
     top: 45%;
@@ -120,6 +119,7 @@ body {
 <div class="bg-top"></div>
 <div class="bg-bottom"></div>
 
+<!-- 🌊 WAVE -->
 <div class="wave">
 <svg viewBox="0 0 1440 320">
 <path fill="#7dd3fc"
@@ -128,75 +128,94 @@ d="M0,160C200,280,400,60,700,160C1000,260,1200,100,1440,180L1440,320L0,320Z">
 </svg>
 </div>
 
+<!-- 🔥 CONDITION START -->
+{% if request.path != '/' %}
+
 <div class="layout">
 
-<!-- SIDEBAR -->
-<div class="sidebar">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
 
-<h4>🚀 PlacementPro</h4>
+        <h4>🚀 PlacementPro</h4>
 
-{% if user.is_authenticated %}
+        {% if user.is_authenticated %}
 
-    {% if user.is_superuser %}
-        <a href="/dashboard/">📊 Dashboard</a>
-        <a href="/students/">🎓 Students</a>
-        <a href="/companies/">🏢 Companies</a>
-        <a href="/students/applications/">📄 Applications</a>
-        <a href="/students/admin-notifications/">🔔 Notifications</a>
-        <a href="/secure-admin/">⚙️ Admin</a>
+            {% if user.is_superuser %}
+                <a href="/dashboard/">📊 Dashboard</a>
+                <a href="/students/">🎓 Students</a>
+                <a href="/companies/">🏢 Companies</a>
+                <a href="/students/applications/">📄 Applications</a>
+                <a href="/students/admin-notifications/">🔔 Notifications</a>
+                <a href="/secure-admin/">⚙️ Admin</a>
 
-    {% elif user.is_staff %}
-        <a href="/students/">🎓 Students</a>
-        <a href="/companies/">🏢 Companies</a>
-        <a href="/students/notifications/">🔔 Notifications</a>
+            {% elif user.is_staff %}
+                <a href="/students/">🎓 Students</a>
+                <a href="/companies/">🏢 Companies</a>
+                <a href="/students/notifications/">🔔 Notifications</a>
 
-    {% elif user.company %}
-        <a href="/companies/dashboard/">📊 Dashboard</a>
-        <a href="/companies/jobs/">💼 Jobs</a>
-        <a href="/companies/applications/">📄 Applications</a>
+            {% elif user.company %}
+                <a href="/companies/dashboard/">📊 Dashboard</a>
+                <a href="/companies/jobs/">💼 Jobs</a>
+                <a href="/companies/applications/">📄 Applications</a>
 
-    {% else %}
-        <a href="/companies/">🏢 Companies</a>
-        <a href="/students/applications/">📄 My Applications</a>
-        <a href="/students/notifications/">🔔 Notifications</a>
-    {% endif %}
+            {% else %}
+                <a href="/companies/">🏢 Companies</a>
+                <a href="/students/applications/">📄 My Applications</a>
+                <a href="/students/notifications/">🔔 Notifications</a>
+            {% endif %}
 
-{% endif %}
+        {% endif %}
+
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <div class="topbar">
+
+            {% if user.is_authenticated %}
+
+            <span class="role-badge">
+                {% if user.is_superuser %}
+                    👑 Admin
+                {% elif user.is_staff %}
+                    🧑‍💼 Staff
+                {% elif user.company %}
+                    🏢 Company
+                {% else %}
+                    🎓 Student
+                {% endif %}
+            </span>
+
+            <a href="/logout/" class="btn btn-danger btn-sm">Logout</a>
+
+            {% else %}
+            <a href="/login/" class="btn btn-dark btn-sm">Login</a>
+            {% endif %}
+
+        </div>
+
+        {% block content %}{% endblock %}
+
+    </div>
 
 </div>
-
-<!-- MAIN -->
-<div class="main">
-
-<div class="topbar">
-
-{% if user.is_authenticated %}
-
-<span class="role-badge">
-    {% if user.is_superuser %}
-        👑 Admin
-    {% elif user.is_staff %}
-        🧑‍💼 Staff
-    {% elif user.company %}
-        🏢 Company
-    {% else %}
-        🎓 Student
-    {% endif %}
-</span>
-
-<a href="/logout/" class="btn btn-danger btn-sm">Logout</a>
 
 {% else %}
-<a href="/login/" class="btn btn-dark btn-sm">Login</a>
+
+<!-- 🔥 HOME PAGE (NO SIDEBAR) -->
+<div class="main">
+
+    <div class="topbar">
+        <a href="/login/" class="btn btn-dark btn-sm">Login</a>
+    </div>
+
+    {% block content %}{% endblock %}
+
+</div>
+
 {% endif %}
-
-</div>
-
-{% block content %}{% endblock %}
-
-</div>
-
-</div>
+<!-- 🔥 CONDITION END -->
 
 </body>
 </html>

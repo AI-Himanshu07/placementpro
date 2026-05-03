@@ -13,19 +13,19 @@ body {
     background: linear-gradient(to bottom, #ffffff, #e0f2fe);
 }
 
-/* WAVE */
-body::after {
-    content:"";
+/* 🌊 WAVE BACKGROUND */
+.wave {
     position:absolute;
     bottom:0;
     width:100%;
     height:50%;
-    background: linear-gradient(135deg, #7dd3fc, #38bdf8);
+    background: linear-gradient(135deg, #93c5fd, #60a5fa);
     border-top-left-radius:50% 20%;
     border-top-right-radius:50% 20%;
+    z-index: 0;
 }
 
-/* HOME BTN */
+/* HOME BUTTON */
 .home-btn {
     position:absolute;
     top:20px;
@@ -34,9 +34,10 @@ body::after {
     padding:8px 12px;
     border-radius:8px;
     text-decoration:none;
+    z-index: 5;
 }
 
-/* WELCOME */
+/* WELCOME SCREEN */
 .welcome {
     position:absolute;
     width:100%;
@@ -45,10 +46,21 @@ body::after {
     justify-content:center;
     align-items:center;
     flex-direction:column;
+    text-align:center;
     cursor:pointer;
+    z-index: 2;
 }
 
-/* CARD */
+.welcome h1 {
+    font-size:45px;
+}
+
+.welcome p {
+    max-width:500px;
+    color:#374151;
+}
+
+/* 🔥 LOGIN CARD */
 .card {
     position:absolute;
     top:50%;
@@ -57,8 +69,13 @@ body::after {
     width:340px;
     padding:30px;
     border-radius:20px;
-    background:white;
-    box-shadow:0 25px 60px rgba(0,0,0,0.25);
+
+    /* LIGHT RED */
+    background: linear-gradient(135deg, #fecaca, #fca5a5);
+
+    box-shadow:0 25px 60px rgba(0,0,0,0.3);
+
+    z-index: 10; /* 🔥 FIX HIDDEN ISSUE */
     transition:0.5s;
 }
 
@@ -66,24 +83,36 @@ body::after {
     transform:translate(-50%,-50%) scale(1);
 }
 
+/* INPUT */
 input {
     width:100%;
-    margin-bottom:10px;
     padding:10px;
+    margin-bottom:10px;
+    border:none;
+    border-radius:8px;
 }
 
+/* BUTTON */
 button {
     width:100%;
     padding:10px;
-    background:#2563eb;
+    background:black;
     color:white;
     border:none;
     border-radius:8px;
 }
 
+/* LINKS */
 .links {
     text-align:center;
     margin-top:10px;
+}
+
+.links a {
+    display:block;
+    color:black;
+    text-decoration:none;
+    margin-top:5px;
 }
 
 </style>
@@ -93,24 +122,39 @@ button {
 
 <a href="/" class="home-btn">🏠 Home</a>
 
+<div class="wave"></div>
+
+<!-- ✅ WELCOME SCREEN -->
 <div class="welcome" onclick="openLogin()">
+
 <h1>🚀 PlacementPro</h1>
-<p>Click anywhere to login</p>
+
+<p>
+Welcome to PlacementPro — a smart platform where students apply for jobs,
+companies hire talent, and admins manage the entire placement system.
+</p>
+
+<p><b>Click anywhere to login</b></p>
+
 </div>
 
+<!-- ✅ LOGIN CARD -->
 <div class="card" id="card">
 
 <h2>Login</h2>
 
 <form method="post">
 {% csrf_token %}
+
 <input type="text" name="username" placeholder="Username" required>
 <input type="password" name="password" placeholder="Password" required>
+
 <button type="submit">Login</button>
+
 </form>
 
 <div class="links">
-<a href="/password-reset/">Forgot Password</a>
+<a href="/password-reset/">Forgot Password?</a>
 <a href="/students/register/">Create Account</a>
 </div>
 
@@ -118,12 +162,13 @@ button {
 
 <script>
 
+/* SHOW LOGIN */
 function openLogin(){
     document.querySelector(".welcome").style.display="none";
     document.getElementById("card").classList.add("active");
 }
 
-/* 3D FIX */
+/* 3D EFFECT */
 document.addEventListener("mousemove",(e)=>{
     const card=document.getElementById("card");
 
