@@ -19,16 +19,6 @@
 <tbody>
 {% for app in applications %}
 
-
-{% if app.student.resume %}
-<a href="/students/view-resume/{{ app.student.id }}/" 
-   class="btn btn-info btn-sm">
-   📄 View Resume
-</a>
-{% else %}
-<span class="text-muted">No Resume</span>
-{% endif %}
-
 <tr>
     <td>{{ app.student.name }}</td>
     <td>{{ app.company.name }}</td>
@@ -46,7 +36,12 @@
 
     <td>
         {% if app.student.resume %}
-            <a href="{{ app.student.resume.url }}" class="btn btn-info btn-sm">View</a>
+            <a href="{{ app.student.resume.url }}" target="_blank"
+               class="btn btn-outline-primary btn-sm">
+                📄 View
+            </a>
+        {% else %}
+            <span class="text-muted">No Resume</span>
         {% endif %}
     </td>
 
@@ -54,10 +49,10 @@
         <a href="/students/cancel/{{ app.id }}/" class="btn btn-danger btn-sm">Cancel</a>
     </td>
 </tr>
+
 {% endfor %}
 </tbody>
 </table>
 </div>
-
 
 {% endblock %}
