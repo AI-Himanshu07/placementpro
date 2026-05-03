@@ -459,12 +459,11 @@ def admin_notifications(request):
         "notifications": notifications
     })
 
-
-@user_passes_test(is_admin)
+@login_required
 def delete_notification(request, id):
-    note = Notification.objects.get(id=id)
-    note.delete()
-    return redirect('/admin-notifications/')
+    notification = get_object_or_404(Notification, id=id)
+    notification.delete()
+    return redirect('/students/admin-notifications/')
 
 @login_required
 def student_notifications(request):
