@@ -106,15 +106,14 @@ def home(request):
 def is_admin(user):
     return user.is_superuser
 
-@user_passes_test(is_admin)
-def secure_admin(request):
+# admin security
 
+@login_required
+def secure_admin(request):
     if request.method == "POST":
         password = request.POST.get("password")
 
-        if request.user.check_password(password):
-            return redirect('/admin/')
-        else:
-            return render(request, "secure_admin.html", {"error": "Wrong password"})
+        if password == "admin123":  # change this
+            return redirect("/admin/")
 
     return render(request, "secure_admin.html")

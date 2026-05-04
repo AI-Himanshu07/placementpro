@@ -1,6 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from companies.models import Company
+import os
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
+from .models import Student 
+from django.db.models.signals import pre_save
 
 
 class Student(models.Model):
@@ -33,4 +38,25 @@ class Notification(models.Model):
     def __str__(self):
         return self.message
     
+@receiver(post_delete, sender=Student)
+def delete_resume_file(sender, instance, **kwargs):
+    if instance.resume:
+        if os.path.isfile(instance.resume.path):
+            os.remove(instance.resume.path)    
     
+@receiver(pre_save, sender=Student)
+def delete_old_resume(sender, instance, **kwargs):
+    if not instance.pk:
+        return
+
+    try:
+        old = Student.objects.get(pk=instance.pk)
+    except Student.DoesNotExist:
+        return
+
+    old_file = old.resume
+    new_file = instance.resume
+
+    if old_file and old_file != new_file:
+        if os.path.isfile(old_file.path):
+            os.remove(old_file.path)    

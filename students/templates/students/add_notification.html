@@ -1,19 +1,30 @@
-{% extends 'base.html' %}
-{% block content %}
+<div class="container mt-5">
 
-<div class="container mt-4">
+<!-- 🔙 BACK BUTTON -->
+<a href="javascript:history.back()" class="btn btn-secondary mb-3">
+    ⬅ Back
+</a>
 
-<h3>Add Notification</h3>
+<h3 class="mb-3">📢 Send Notification</h3>
+
+<div class="card p-4 shadow-sm"
+     style="background:#e0f2fe; border-radius:15px;">
 
 <form method="post">
-    {% csrf_token %}
+{% csrf_token %}
 
-    <textarea name="message" class="form-control mb-3"
-              placeholder="Enter message..." required></textarea>
+<textarea name="message"
+          class="form-control mb-3"
+          placeholder="Write message..."
+          rows="4"
+          style="border-radius:10px;"></textarea>
 
-    <button class="btn btn-primary">Send Notification</button>
+<button class="btn btn-primary w-100">
+    🚀 Send Notification
+</button>
+
 </form>
 
 </div>
 
-{% endblock %}
+</div>
