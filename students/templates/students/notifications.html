@@ -3,33 +3,33 @@
 
 <div class="container mt-4">
 
-<!-- 🔙 BACK -->
 <a href="javascript:history.back()" class="btn btn-secondary mb-3">
-    ⬅ Back
+⬅ Back
 </a>
 
 <h3 class="mb-4">🔔 Notifications</h3>
 
 <div class="card p-4 shadow-sm"
-     style="background:#e0f2fe; border-radius:15px;">
+     style="background:#e0f2fe; border-radius:20px;">
 
 {% for note in notifications %}
 
 <div class="p-3 mb-3 rounded shadow-sm"
-     style="background:white; border-left:6px solid #38bdf8; transition:0.3s;">
+     style="background:white;
+            border-left:6px solid #0ea5e9;
+            transition:0.3s;">
 
-    <p class="mb-1">{{ note.message }}</p>
+<p class="mb-1">{{ note.message }}</p>
+<small class="text-muted">{{ note.created_at }}</small>
 
-    <small class="text-muted">{{ note.created_at }}</small>
-
-    {% if user.is_superuser %}
-    <div class="mt-2">
-        <a href="/students/delete-notification/{{ note.id }}/"
-           class="btn btn-danger btn-sm">
-           🗑 Delete
-        </a>
-    </div>
-    {% endif %}
+{% if user.is_superuser %}
+<div class="mt-2">
+<a href="/students/delete-notification/{{ note.id }}/"
+   class="btn btn-danger btn-sm">
+🗑 Delete
+</a>
+</div>
+{% endif %}
 
 </div>
 
