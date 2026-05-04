@@ -202,7 +202,7 @@ def view_resume(request, id):
     if student.resume:
         return FileResponse(student.resume.open(), content_type='application/pdf')
 
-    return redirect('/')
+    return HttpResponse("No resume found")
 
 
 @login_required
@@ -396,14 +396,11 @@ def add_notification(request):
 
 @login_required
 def view_notifications(request):
-    from .models import Notification
-
-    notes = Notification.objects.all().order_by('-id')
+    notes = Notification.objects.all().order_by('-created_at')
 
     return render(request, 'students/notifications.html', {
-        'notes': notes
+        'notifications': notes   #  FIXED (was notes)
     })
-
 
 
 
@@ -468,4 +465,7 @@ def delete_notification(request, id):
 @login_required
 def student_notifications(request):
     notes = Notification.objects.all().order_by('-created_at')
-    return render(request, "students/notifications.html", {"notes": notes})
+
+    return render(request, "students/notifications.html", {
+        "notifications": notes   #  FIXED
+    })
