@@ -122,13 +122,13 @@ STATICFILES_DIRS = [
 ]
 
 
-STATIC_URL = "/media/"
-STATIC_ROOT = os.path.join(BASE_DIR, "media")
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
 MEDIA_URL ='/media/'
-MEDIA_ROOT = BASE_DIR /'media'
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
