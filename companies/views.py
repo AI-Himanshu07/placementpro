@@ -216,5 +216,5 @@ def edit_job(request, id):
 
 @login_required
 def view_job(request, id):
-    job = get_object_or_404(Job, id=id)  # safer
+    job = get_object_or_404(Job, id=id)
     return render(request, 'companies/view_job.html', {'job': job})

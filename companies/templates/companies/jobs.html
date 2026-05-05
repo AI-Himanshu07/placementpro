@@ -36,7 +36,12 @@
     <td>{{ job.min_cgpa }}</td>
 
     <td>
-  
+
+        <!-- ✅ NEW VIEW BUTTON -->
+        <a href="/companies/jobs/{{ job.id }}/" class="btn btn-primary btn-sm">
+            👁 View
+        </a>
+
         {% if student %}
             {% if student.cgpa >= job.min_cgpa %}
                 <a href="/students/apply-job/{{ job.id }}/" class="btn btn-success btn-sm">Apply</a>
@@ -55,6 +60,5 @@
 {% endfor %}
 
 </table>
-
 
 {% endblock %}
