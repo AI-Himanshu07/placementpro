@@ -1,28 +1,65 @@
-<div class="container mt-5">
+{% extends 'base.html' %}
+{% block content %}
 
-<h3>🔔 Send Notification</h3>
+<div class="container mt-4">
+
+<a href="javascript:history.back()" class="btn btn-outline-dark mb-3">
+⬅ Back
+</a>
+
+<h3 class="mb-4">📢 Manage Notifications</h3>
+
+<div class="row">
+
+<!-- SEND -->
+<div class="col-md-5">
+<div class="card p-4 shadow-lg" style="border-radius:20px; background:#e0f2fe;">
+
+<h5>Send Notification</h5>
 
 <form method="post">
 {% csrf_token %}
-<textarea name="message" class="form-control" placeholder="Enter message"></textarea>
-<button class="btn btn-dark mt-2">Send</button>
+
+<textarea name="message"
+          class="form-control mb-3"
+          placeholder="Write message..."
+          rows="4"></textarea>
+
+<button class="btn btn-primary w-100">Send</button>
+
 </form>
 
-<hr>
+</div>
+</div>
 
-<h4>All Notifications</h4>
+<!-- LIST -->
+<div class="col-md-7">
+<div class="card p-4 shadow-lg" style="border-radius:20px; background:#f8fafc;">
 
-{% for n in notifications %}
-<div class="card p-3 mb-2">
-    {{ n.message }}
+<h5>All Notifications</h5>
 
-    <a href="/students/delete-notification/{{ n.id }}/"
-       class="btn btn-danger btn-sm mt-2">
-       Delete
-    </a>
+{% for note in notifications %}
+<div class="p-3 mb-3 rounded shadow-sm"
+     style="background:white; border-left:5px solid #0ea5e9;">
+
+<p>{{ note.message }}</p>
+<small class="text-muted">{{ note.created_at }}</small>
+
+<a href="/students/delete-notification/{{ note.id }}/"
+   class="btn btn-danger btn-sm mt-2">
+🗑 Delete
+</a>
+
 </div>
 {% empty %}
-<p>No notifications</p>
+<p class="text-muted">No notifications</p>
 {% endfor %}
 
 </div>
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

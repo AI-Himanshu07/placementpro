@@ -11,18 +11,32 @@ body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
     overflow-x: hidden;
+    position: relative;
 }
 
-/* 🔥 BACKGROUND (NO STRAIGHT LINE) */
+/* 🔥 BACKGROUND FIX (SMOOTH CURVE) */
 .wave-bg {
     position: fixed;
     width: 100%;
     top: 0;
-    z-index: -3;
+    left: 0;
+    z-index: -5;
 }
 
+/* WHITE TOP */
+.wave-bg .top-wave svg path {
+    fill: #ffffff;
+}
+
+/* BLUE BOTTOM */
+.wave-bg .bottom-wave svg path {
+    fill: #7dd3fc;
+}
+
+/* ADD SOFT BLUR EFFECT */
 .wave-bg svg {
     display: block;
+    width: 100%;
 }
 
 /* LAYOUT */
@@ -34,19 +48,18 @@ body {
 .sidebar {
     width: 230px;
     min-height: 100vh;
-    background: linear-gradient(180deg, #fbcacd, #fd1e1e);
-    color: #fa3232;
+    background: linear-gradient(180deg, #fecaca, #f87171);
     padding: 20px;
 }
 
 .sidebar h4 {
     margin-bottom: 25px;
-    color: #070707;
+    color: #111;
 }
 
 .sidebar a {
     display: block;
-    color: #0e0d0d;
+    color: #111;
     text-decoration: none;
     padding: 10px;
     border-radius: 10px;
@@ -56,14 +69,14 @@ body {
 }
 
 .sidebar a:hover {
-    background: #e13d3d;
+    background: #ef4444;
     color: white;
 }
 
 /* MAIN */
 .main {
     flex: 1;
-    padding: 25px;
+    padding: 30px;
     min-height: 100vh;
 }
 
@@ -76,7 +89,7 @@ body {
 }
 
 .role-badge {
-    background: #3cc1ff;
+    background: #38bdf8;
     color: white;
     padding: 5px 10px;
     border-radius: 8px;
@@ -87,22 +100,20 @@ body {
 
 <body>
 
-<!-- 🔥 CURVED WHITE + BLUE BACKGROUND -->
+<!-- 🔥 BACKGROUND -->
 <div class="wave-bg">
 
-<!-- WHITE TOP -->
+<div class="top-wave">
 <svg viewBox="0 0 1440 320">
-<path fill="#ffffff"
-d="M0,160C200,80,400,200,700,160C1000,120,1200,200,1440,160L1440,0L0,0Z">
-</path>
+<path d="M0,160C200,80,400,200,700,160C1000,120,1200,200,1440,160L1440,0L0,0Z"></path>
 </svg>
+</div>
 
-<!-- BLUE BOTTOM -->
+<div class="bottom-wave">
 <svg viewBox="0 0 1440 320">
-<path fill="#7dd3fc"
-d="M0,160C200,280,400,100,700,180C1000,260,1200,100,1440,200L1440,320L0,320Z">
-</path>
+<path d="M0,160C200,280,400,100,700,180C1000,260,1200,100,1440,200L1440,320L0,320Z"></path>
 </svg>
+</div>
 
 </div>
 
@@ -138,6 +149,7 @@ d="M0,160C200,280,400,100,700,180C1000,260,1200,100,1440,200L1440,320L0,320Z">
         <a href="/companies/applications/">📄 Applications</a>
 
     {% else %}
+        <a href="/students/dashboard/">📊 Dashboard</a> <!-- ✅ ADDED -->
         <a href="/companies/">🏢 Companies</a>
         <a href="/students/applications/">📄 My Applications</a>
         <a href="/students/notifications/">🔔 Notifications</a>
@@ -154,6 +166,11 @@ d="M0,160C200,280,400,100,700,180C1000,260,1200,100,1440,200L1440,320L0,320Z">
 <div class="topbar">
 
 {% if user.is_authenticated %}
+
+<span class="me-2">
+👤 {{ user.username }}  <!-- ✅ SHOW USER -->
+</span>
+
 <span class="role-badge">
     {% if user.is_superuser %} 👑 Admin
     {% elif user.is_staff %} 🧑‍💼 Staff

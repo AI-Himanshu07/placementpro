@@ -404,38 +404,31 @@ def view_notifications(request):
 
 
 
-def register_student(request):
+@login_required
+@user_passes_test(is_staff)
+def add_student(request):
+    if request.method == 'POST':
 
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        email = request.POST.get("email")
-        name = request.POST.get("name")
+        username = request.POST.get('name')  # ✅ FIXED
+        password = "123456"
 
-        # check user exists
-        if User.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists")
-            return render(request, "students/register.html")
-
-        # create user
         user = User.objects.create_user(
             username=username,
             password=password,
-            email=email
+            email=request.POST.get('email')
         )
 
-        # create student profile
         Student.objects.create(
             user=user,
-            name=name,
-            email=email,
-            cgpa=0
+            name=request.POST.get('name'),
+            email=request.POST.get('email'),
+            cgpa=request.POST.get('cgpa'),
+            resume=request.FILES.get('resume')
         )
 
-        messages.success(request, "Account created successfully")
-        return redirect('/login/')
+        return redirect('/students/')
 
-    return render(request, "students/register.html")
+    return render(request, 'students/add_student.html')
 
 
 

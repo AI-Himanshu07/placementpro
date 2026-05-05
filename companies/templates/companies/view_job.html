@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-4">
+
+<a href="javascript:history.back()" class="btn btn-secondary mb-3">
+⬅ Back
+</a>
+
+<h3>{{ job.title }}</h3>
+
+<p><strong>Type:</strong> {{ job.job_type }}</p>
+<p><strong>Min CGPA:</strong> {{ job.min_cgpa }}</p>
+<p>{{ job.description }}</p>
+
+</div>
+
+{% endblock %}
