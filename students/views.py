@@ -403,34 +403,38 @@ def view_notifications(request):
     })
 
 
+def register_student(request):
+    from django.contrib.auth.models import User
+    from django.contrib import messages
+    from .models import Student
 
-@login_required
-@user_passes_test(is_staff)
-def add_student(request):
-    if request.method == 'POST':
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        email = request.POST.get("email")
+        name = request.POST.get("name")
 
-        username = request.POST.get('name')  # ✅ FIXED
-        password = "123456"
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists")
+            return render(request, "students/register.html")
 
         user = User.objects.create_user(
             username=username,
             password=password,
-            email=request.POST.get('email')
+            email=email
         )
 
         Student.objects.create(
             user=user,
-            name=request.POST.get('name'),
-            email=request.POST.get('email'),
-            cgpa=request.POST.get('cgpa'),
-            resume=request.FILES.get('resume')
+            name=name,
+            email=email,
+            cgpa=0
         )
 
-        return redirect('/students/')
+        messages.success(request, "Account created successfully")
+        return redirect('/login/')
 
-    return render(request, 'students/add_student.html')
-
-
+    return render(request, "students/register.html")
 
 def is_admin(user):
     return user.is_superuser
