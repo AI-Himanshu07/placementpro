@@ -239,11 +239,13 @@ def edit_job(request, id):
     return render(request, 'companies/edit_job.html', {'job': job})
 
 
-# 🔹 VIEW JOB (🔥 MAIN FIX)
+# 🔹 VIEW JOB 
 @login_required
 def view_job(request, id):
-    job = get_object_or_404(Job, id=id)
+     print("VIEW JOB HIT", id)  
 
-    return render(request, 'companies/view_job.html', {
+     job = get_object_or_404(Job, id=id)
+
+     return render(request, 'companies/view_job.html', {
         'job': job
     })
