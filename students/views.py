@@ -324,15 +324,12 @@ def download_students(request):
 # 🔹 APPLY JOB
 @login_required
 def apply_job(request, job_id):
-    from .models import Student, Application
-    from companies.models import Job
-
     student = Student.objects.get(user=request.user)
     job = Job.objects.get(id=job_id)
 
-    # ✅ Prevent duplicate
-    if Application.objects.filter(student=student, company=job.company).exists():
-        messages.warning(request, "Already applied to this company")
+    # ✅ CHECK PER JOB (FIXED)
+    if Application.objects.filter(student=student, job=job).exists():
+        messages.warning(request, "Already applied to this job")
         return redirect('/companies/')
 
     # ✅ CGPA check
@@ -343,6 +340,7 @@ def apply_job(request, job_id):
     Application.objects.create(
         student=student,
         company=job.company,
+        job=job,  # 🔥 IMPORTANT
         status="Pending"
     )
 

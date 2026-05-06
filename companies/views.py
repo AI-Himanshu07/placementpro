@@ -19,16 +19,17 @@ def company_list(request):
     if query:
         companies = companies.filter(name__icontains=query)
 
-    applied_companies = []
+    applied_jobs = []
     student = None
 
     if request.user.is_authenticated:
         try:
             student = Student.objects.get(user=request.user)
 
-            applied_companies = Application.objects.filter(
+            # ✅ FIX: job-based tracking (correct)
+            applied_jobs = Application.objects.filter(
                 student=student
-            ).values_list('company_id', flat=True)
+            ).values_list('job_id', flat=True)
 
         except Student.DoesNotExist:
             pass
@@ -36,7 +37,7 @@ def company_list(request):
     return render(request, 'companies/company_list.html', {
         'companies': companies,
         'student': student,
-        'applied_companies': applied_companies
+        'applied_jobs': applied_jobs
     })
 
 
@@ -47,7 +48,6 @@ def company_detail(request, id):
 
     student = Student.objects.filter(user=request.user).first()
 
-    
     jobs = Job.objects.filter(company=company)
 
     return render(request, 'companies/company_detail.html', {
@@ -66,7 +66,7 @@ def add_company(request):
             name=request.POST.get('name'),
             role=request.POST.get('role'),
             min_cgpa=request.POST.get('min_cgpa'),
-            job=request.POST.get('job'),  # old field (kept same)
+            job=request.POST.get('job'),  # old field (kept)
         )
         return redirect('/companies/')
     return render(request, 'companies/add_company.html')
@@ -180,12 +180,11 @@ def company_jobs(request):
 
     jobs = Job.objects.filter(company=company)
 
-    # 🔥 FIX: add student (for eligibility UI)
     student = Student.objects.filter(user=request.user).first()
 
     return render(request, 'companies/jobs.html', {
         'jobs': jobs,
-        'student': student   # ✅ IMPORTANT
+        'student': student
     })
 
 
@@ -242,10 +241,19 @@ def edit_job(request, id):
 # 🔹 VIEW JOB 
 @login_required
 def view_job(request, id):
-     print("VIEW JOB HIT", id)  
+    job = get_object_or_404(Job, id=id)
 
-     job = get_object_or_404(Job, id=id)
+    #  IMPORTANT FIX: pass student + applied_jobs
+    student = Student.objects.filter(user=request.user).first()
 
-     return render(request, 'companies/view_job.html', {
-        'job': job
+    applied_jobs = []
+    if student:
+        applied_jobs = Application.objects.filter(
+            student=student
+        ).values_list('job_id', flat=True)
+
+    return render(request, 'companies/view_job.html', {
+        'job': job,
+        'student': student,
+        'applied_jobs': applied_jobs
     })

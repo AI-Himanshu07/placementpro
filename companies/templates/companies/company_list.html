@@ -85,32 +85,30 @@
                            Admin Apply
                         </a>
                     {% endif %}
+{% if user.is_authenticated and student %}
 
-                    {% if user.is_authenticated and student %}
+    {% if job.id in applied_jobs %}
+        <button class="btn btn-info btn-sm mt-2" disabled>
+            ✅ Already Applied
+        </button>
 
-                        {% if company.id in applied_companies %}
-                            <button class="btn btn-info btn-sm mt-2" disabled>
-                                ✅ Already Applied
-                            </button>
+    {% elif student.cgpa >= job.min_cgpa %}
+        <a href="/students/apply-job/{{ job.id }}/"
+           class="btn btn-success btn-sm mt-2">
+           Apply
+        </a>
 
-                        {% elif student.cgpa >= job.min_cgpa %}
-                            <a href="/students/apply-job/{{ job.id }}/"
-                               class="btn btn-success btn-sm mt-2">
-                               Apply
-                            </a>
+    {% else %}
+        <button class="btn btn-secondary btn-sm mt-2" disabled>
+            ❌ Not Eligible
+        </button>
+    {% endif %}
 
-                        {% else %}
-                            <button class="btn btn-secondary btn-sm mt-2" disabled>
-                                Not Eligible
-                            </button>
-
-                        {% endif %}
-
-                    {% else %}
-                        <a href="/login/" class="btn btn-outline-primary btn-sm mt-2">
-                            Login to Apply
-                        </a>
-                    {% endif %}
+{% else %}
+    <a href="/login/" class="btn btn-outline-primary btn-sm mt-2">
+        Login to Apply
+    </a>
+{% endif %}
 
                 </li>
 
