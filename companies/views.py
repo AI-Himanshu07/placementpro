@@ -47,12 +47,12 @@ def company_detail(request, id):
 
     student = Student.objects.filter(user=request.user).first()
 
-    # 🔥 IMPORTANT FIX: load jobs of this company
+    
     jobs = Job.objects.filter(company=company)
 
     return render(request, 'companies/company_detail.html', {
         'company': company,
-        'jobs': jobs,   # ✅ REQUIRED
+        'jobs': jobs,
         'student': student
     })
 

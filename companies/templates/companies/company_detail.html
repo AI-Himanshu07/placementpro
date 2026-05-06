@@ -1,25 +1,34 @@
-<h4 class="mt-4">💼 Jobs</h4>
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-4">
+
+<a href="javascript:history.back()" class="btn btn-secondary mb-3">
+⬅ Back
+</a>
+
+<h2>{{ company.name }}</h2>
+<p>Min CGPA: {{ company.min_cgpa }}</p>
+
+<hr>
+
+<h4>💼 Available Jobs</h4>
 
 {% for job in jobs %}
-<div class="card p-3 mb-2">
+<div class="card p-3 mb-3 shadow">
 
     <h5>{{ job.title }}</h5>
-    <p>{{ job.description }}</p>
-    <p><strong>CGPA:</strong> {{ job.min_cgpa }}</p>
+    <p>{{ job.job_type }}</p>
 
-    <!-- VIEW -->
     <a href="/companies/jobs/{{ job.id }}/" class="btn btn-info btn-sm">
-        👁 View
+        👁 View Job
     </a>
-
-    <!--  APPLY -->
-    {% if student and student.cgpa >= job.min_cgpa %}
-        <a href="/students/apply-job/{{ job.id }}/" class="btn btn-success btn-sm">
-            Apply
-        </a>
-    {% endif %}
 
 </div>
 {% empty %}
 <p>No jobs available</p>
 {% endfor %}
+
+</div>
+
+{% endblock %}
