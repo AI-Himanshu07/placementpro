@@ -3,8 +3,11 @@
 
 <h2 class="mb-3">💼 Jobs</h2>
 
+<a href="javascript:history.back()" class="btn btn-secondary mb-3">⬅ Back</a>
+
 <form method="post" action="/companies/add-job/" class="mb-4">
     {% csrf_token %}
+
     <input type="text" name="title" placeholder="Job Title" class="form-control mb-2" required>
 
     <select name="job_type" class="form-control mb-2">
@@ -32,15 +35,13 @@
 <tr>
     <td>{{ job.title }}</td>
     <td>{{ job.job_type }}</td>
-    <td>{{ job.description }}</td>
+    <td>{{ job.description|truncatewords:10 }}</td>
     <td>{{ job.min_cgpa }}</td>
 
     <td>
 
-        <!-- ✅ VIEW BUTTON (THIS WAS MISSING) -->
-        <a href="/companies/jobs/{{ job.id }}/" class="btn btn-info btn-sm">
-            👁 View
-        </a>
+        <!-- ✅ VIEW BUTTON -->
+        <a href="/companies/jobs/{{ job.id }}/" class="btn btn-info btn-sm">👁 View</a>
 
         {% if student %}
             {% if student.cgpa >= job.min_cgpa %}
@@ -54,6 +55,7 @@
 
     </td>
 </tr>
+
 {% empty %}
 <tr>
     <td colspan="5">No jobs</td>

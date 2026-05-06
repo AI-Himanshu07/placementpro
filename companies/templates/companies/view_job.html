@@ -7,16 +7,16 @@
 ⬅ Back
 </a>
 
-<div class="card p-4 shadow-lg"
-     style="border-radius:20px; background:#e0f2fe;">
+<div class="card shadow p-4" style="border-radius:15px; background:#e0f2fe;">
 
-<h3 class="mb-3">💼 {{ job.title }}</h3>
+<h3>💼 {{ job.title }}</h3>
 
 <p><strong>Type:</strong> {{ job.job_type }}</p>
-<p><strong>Description:</strong></p>
-<p>{{ job.description }}</p>
+<p><strong>Min CGPA:</strong> {{ job.min_cgpa }}</p>
 
-<p><strong>Minimum CGPA:</strong> {{ job.min_cgpa }}</p>
+<hr>
+
+<p>{{ job.description }}</p>
 
 </div>
 

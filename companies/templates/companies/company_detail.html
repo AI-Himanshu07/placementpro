@@ -1,60 +1,25 @@
-{% extends 'base.html' %}
-{% block content %}
-
-<div class="container mt-4">
-
-<h2>{{ company.name }}</h2>
-<p class="text-muted">Available Positions</p>
-
-<div class="row">
+<h4 class="mt-4">💼 Jobs</h4>
 
 {% for job in jobs %}
+<div class="card p-3 mb-2">
 
-<div class="col-md-4 mb-4">
+    <h5>{{ job.title }}</h5>
+    <p>{{ job.description }}</p>
+    <p><strong>CGPA:</strong> {{ job.min_cgpa }}</p>
 
-<div class="card p-4 shadow-sm h-100">
+    <!-- VIEW -->
+    <a href="/companies/jobs/{{ job.id }}/" class="btn btn-info btn-sm">
+        👁 View
+    </a>
 
-<h5>{{ job.title }}</h5>
-<p class="text-muted">{{ job.description }}</p>
-<p>📊 Min CGPA: {{ job.min_cgpa }}</p>
-
-<hr>
-
-<!-- APPLY BUTTON -->
-{% if user.is_superuser %}
-    <a href="/students/apply/{{ company.id }}/" 
-       class="btn btn-primary w-100">👑 Apply (Admin)</a>
-
-{% elif user.is_staff %}
-    <button class="btn btn-secondary w-100" disabled>Staff View</button>
-
-{% else %}
-
-    {% if student %}
-        {% if student.cgpa >= job.min_cgpa %}
-            <a href="/students/apply/{{ company.id }}/" 
-               class="btn btn-success w-100">🚀 Apply</a>
-        {% else %}
-            <button class="btn btn-secondary w-100" disabled>
-                ❌ Not Eligible
-            </button>
-        {% endif %}
+    <!--  APPLY -->
+    {% if student and student.cgpa >= job.min_cgpa %}
+        <a href="/students/apply-job/{{ job.id }}/" class="btn btn-success btn-sm">
+            Apply
+        </a>
     {% endif %}
 
-{% endif %}
-
 </div>
-
-</div>
-
 {% empty %}
-
 <p>No jobs available</p>
-
 {% endfor %}
-
-</div>
-
-</div>
-
-{% endblock %}

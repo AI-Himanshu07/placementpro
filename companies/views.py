@@ -4,19 +4,18 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 import openpyxl
 from django.http import HttpResponse
 from students.models import Student, Application
-from django.contrib.auth.decorators import login_required
 
 
 def is_staff(user):
     return user.is_staff
 
 
+# 🔹 COMPANY LIST
 def company_list(request):
-    query = request.GET.get('q')  # 🔍 GET SEARCH
+    query = request.GET.get('q')
 
     companies = Company.objects.all()
 
-    # ✅ SEARCH FILTER (NEW)
     if query:
         companies = companies.filter(name__icontains=query)
 
@@ -40,21 +39,25 @@ def company_list(request):
         'applied_companies': applied_companies
     })
 
+
+# 🔹 COMPANY DETAIL
 @login_required
 def company_detail(request, id):
     company = get_object_or_404(Company, id=id)
 
     student = Student.objects.filter(user=request.user).first()
 
+    # 🔥 IMPORTANT FIX: load jobs of this company
     jobs = Job.objects.filter(company=company)
 
     return render(request, 'companies/company_detail.html', {
         'company': company,
-        'jobs': jobs,
+        'jobs': jobs,   # ✅ REQUIRED
         'student': student
     })
 
 
+# 🔹 ADD COMPANY
 @login_required
 @user_passes_test(is_staff)
 def add_company(request):
@@ -63,12 +66,13 @@ def add_company(request):
             name=request.POST.get('name'),
             role=request.POST.get('role'),
             min_cgpa=request.POST.get('min_cgpa'),
-            job=request.POST.get('job'),
+            job=request.POST.get('job'),  # old field (kept same)
         )
         return redirect('/companies/')
     return render(request, 'companies/add_company.html')
 
 
+# 🔹 EDIT COMPANY
 @login_required
 @user_passes_test(is_staff)
 def edit_company(request, id):
@@ -85,6 +89,7 @@ def edit_company(request, id):
     return render(request, 'companies/edit_company.html', {'company': company})
 
 
+# 🔹 DELETE COMPANY
 @login_required
 @user_passes_test(is_staff)
 def delete_company(request, id):
@@ -92,6 +97,8 @@ def delete_company(request, id):
     company.delete()
     return redirect('/companies/')
 
+
+# 🔹 COMPANY DASHBOARD
 @login_required
 def company_dashboard(request):
     company = Company.objects.filter(user=request.user).first()
@@ -112,13 +119,14 @@ def company_dashboard(request):
         'rejected': rejected
     })
 
+
+# 🔹 UPDATE STATUS
 @login_required
 def update_status(request, app_id, status):
     app = get_object_or_404(Application, id=app_id)
 
     company = Company.objects.filter(user=request.user).first()
 
-    # 🔒 सुरक्षा check (very important)
     if not company or app.company != company:
         return redirect('/')
 
@@ -128,6 +136,8 @@ def update_status(request, app_id, status):
 
     return redirect('/companies/applications/')
 
+
+# 🔹 DOWNLOAD COMPANIES
 @login_required
 def download_companies(request):
     wb = openpyxl.Workbook()
@@ -144,6 +154,8 @@ def download_companies(request):
 
     return response
 
+
+# 🔹 COMPANY APPLICATIONS
 @login_required
 def company_applications(request):
     company = Company.objects.filter(user=request.user).first()
@@ -157,6 +169,8 @@ def company_applications(request):
         'applications': applications
     })
 
+
+# 🔹 COMPANY JOBS
 @login_required
 def company_jobs(request):
     company = Company.objects.filter(user=request.user).first()
@@ -166,10 +180,16 @@ def company_jobs(request):
 
     jobs = Job.objects.filter(company=company)
 
+    # 🔥 FIX: add student (for eligibility UI)
+    student = Student.objects.filter(user=request.user).first()
+
     return render(request, 'companies/jobs.html', {
-        'jobs': jobs
+        'jobs': jobs,
+        'student': student   # ✅ IMPORTANT
     })
 
+
+# 🔹 ADD JOB
 @login_required
 def add_job(request):
     company = Company.objects.filter(user=request.user).first()
@@ -189,8 +209,10 @@ def add_job(request):
 
     return render(request, 'companies/add_job.html')
 
+
+# 🔹 DELETE JOB
 @login_required
-def delete_job(request, id):   # changed job_id → id
+def delete_job(request, id):
     job = get_object_or_404(Job, id=id)
 
     company = Company.objects.filter(user=request.user).first()
@@ -200,6 +222,8 @@ def delete_job(request, id):   # changed job_id → id
 
     return redirect('/companies/jobs/')
 
+
+# 🔹 EDIT JOB
 @login_required
 def edit_job(request, id):
     job = get_object_or_404(Job, id=id)
@@ -214,7 +238,12 @@ def edit_job(request, id):
 
     return render(request, 'companies/edit_job.html', {'job': job})
 
+
+# 🔹 VIEW JOB (🔥 MAIN FIX)
 @login_required
 def view_job(request, id):
     job = get_object_or_404(Job, id=id)
-    return render(request, 'companies/view_job.html', {'job': job})
+
+    return render(request, 'companies/view_job.html', {
+        'job': job
+    })
