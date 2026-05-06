@@ -21,7 +21,7 @@ class Student(models.Model):
 class Application(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='applications')
-
+    job = models.ForeignKey('companies.Job', on_delete=models.CASCADE, null=True, blank=True)
     status = models.CharField(max_length=20, default='Pending')
     applied_on = models.DateTimeField(auto_now_add=True)
 
