@@ -26,7 +26,7 @@ class Application(models.Model):
     applied_on = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('student', 'company')  
+     unique_together = ('student', 'job')
 
     def __str__(self):
         return f"{self.student.name} -> {self.company.name}"
