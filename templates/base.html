@@ -12,15 +12,21 @@ body {
     font-family: 'Segoe UI', sans-serif;
     overflow-x: hidden;
     position: relative;
+    background: #f8fafc;
 }
 
-/* 🔥 BACKGROUND FIX (SMOOTH CURVE) */
+/* 🔥 BACKGROUND FIX */
 .wave-bg {
     position: fixed;
     width: 100%;
     top: 0;
     left: 0;
     z-index: -5;
+}
+
+.wave-bg svg {
+    display: block;
+    width: 100%;
 }
 
 /* WHITE TOP */
@@ -33,12 +39,6 @@ body {
     fill: #7dd3fc;
 }
 
-/* ADD SOFT BLUR EFFECT */
-.wave-bg svg {
-    display: block;
-    width: 100%;
-}
-
 /* LAYOUT */
 .layout {
     display: flex;
@@ -46,24 +46,26 @@ body {
 
 /* SIDEBAR */
 .sidebar {
-    width: 230px;
+    width: 240px;
     min-height: 100vh;
     background: linear-gradient(180deg, #fecaca, #f87171);
     padding: 20px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.08);
 }
 
 .sidebar h4 {
     margin-bottom: 25px;
     color: #111;
+    font-weight: bold;
 }
 
 .sidebar a {
     display: block;
     color: #111;
     text-decoration: none;
-    padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 8px;
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 10px;
     transition: 0.3s;
     font-weight: 500;
 }
@@ -71,6 +73,7 @@ body {
 .sidebar a:hover {
     background: #ef4444;
     color: white;
+    transform: translateX(5px);
 }
 
 /* MAIN */
@@ -84,21 +87,47 @@ body {
 .topbar {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     gap: 10px;
     margin-bottom: 20px;
 }
 
+/* USERNAME */
+.user-box {
+    background: white;
+    padding: 6px 14px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    font-weight: 600;
+}
+
+/* ROLE */
 .role-badge {
     background: #38bdf8;
     color: white;
-    padding: 5px 10px;
-    border-radius: 8px;
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+/* ALERT */
+.alert {
+    border-radius: 12px;
+    border: none;
+}
+
+/* CARD GLOBAL */
+.card {
+    border-radius: 18px !important;
+}
+
+/* BUTTON */
+.btn {
+    border-radius: 10px;
 }
 
 </style>
 </head>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <body>
 
@@ -151,7 +180,7 @@ body {
         <a href="/companies/applications/">📄 Applications</a>
 
     {% else %}
-        <a href="/students/dashboard/">📊 Dashboard</a> <!-- ✅ ADDED -->
+        <a href="/students/dashboard/">📊 Dashboard</a>
         <a href="/companies/">🏢 Companies</a>
         <a href="/students/applications/">📄 My Applications</a>
         <a href="/students/notifications/">🔔 Notifications</a>
@@ -165,13 +194,14 @@ body {
 <!-- MAIN -->
 <div class="main">
 
+<!-- TOPBAR -->
 <div class="topbar">
 
 {% if user.is_authenticated %}
 
-<span class="me-2">
-👤 {{ user.username }}  <!-- ✅ SHOW USER -->
-</span>
+<div class="user-box">
+👤 {{ user.username }}
+</div>
 
 <span class="role-badge">
     {% if user.is_superuser %} 👑 Admin
@@ -181,13 +211,33 @@ body {
     {% endif %}
 </span>
 
-<a href="/logout/" class="btn btn-danger btn-sm">Logout</a>
+<a href="/logout/" class="btn btn-danger btn-sm">
+Logout
+</a>
 
 {% else %}
-<a href="/login/" class="btn btn-dark btn-sm">Login</a>
+
+<a href="/login/" class="btn btn-dark btn-sm">
+Login
+</a>
+
 {% endif %}
 
 </div>
+
+<!-- SUCCESS MESSAGE -->
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+            {{ message }}
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+        </div>
+    {% endfor %}
+{% endif %}
 
 {% block content %}{% endblock %}
 
@@ -196,6 +246,8 @@ body {
 {% if request.path != "/" %}
 </div>
 {% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

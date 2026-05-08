@@ -464,3 +464,33 @@ def student_notifications(request):
     return render(request, "students/notifications.html", {
         "notifications": notes   #  FIXED
     })
+
+
+@login_required
+def edit_profile(request):
+
+    student = Student.objects.get(user=request.user)
+
+    if request.method == "POST":
+
+        student.name = request.POST.get('name')
+        student.email = request.POST.get('email')
+        student.cgpa = request.POST.get('cgpa')
+        student.work_experience = request.POST.get('work_experience')
+
+        if request.FILES.get('resume'):
+            student.resume = request.FILES.get('resume')
+
+        student.save()
+
+        # update auth user also
+        student.user.email = student.email
+        student.user.save()
+
+        messages.success(request, "Profile updated successfully")
+
+        return redirect('/students/dashboard/')
+
+    return render(request, 'students/edit_profile.html', {
+        'student': student
+    })

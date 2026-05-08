@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card shadow p-4 border-0 rounded-4">
+
+<h3 class="mb-4">✏ Edit Profile</h3>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label>Name</label>
+    <input type="text"
+           name="name"
+           value="{{ student.name }}"
+           class="form-control mb-3">
+
+    <label>Email</label>
+    <input type="email"
+           name="email"
+           value="{{ student.email }}"
+           class="form-control mb-3">
+
+    <label>CGPA</label>
+    <input type="number"
+           step="0.1"
+           name="cgpa"
+           value="{{ student.cgpa }}"
+           class="form-control mb-3">
+
+    <label>Work Experience</label>
+    <textarea name="work_experience"
+              class="form-control mb-3"
+              rows="4"
+              placeholder="Fresher / Internship / Experience">{{ student.work_experience }}</textarea>
+
+    <label>Resume</label>
+    <input type="file"
+           name="resume"
+           class="form-control mb-4">
+
+    <button class="btn btn-success">
+        💾 Save Changes
+    </button>
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}

@@ -14,7 +14,7 @@ class Student(models.Model):
     email = models.EmailField()
     cgpa = models.FloatField()
     resume = models.FileField(upload_to='resumes/', null=True, blank=True)
-
+    work_experience = models.TextField(blank=True, null=True)
     def __str__(self):
         return self.name
 

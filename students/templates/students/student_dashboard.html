@@ -5,25 +5,69 @@
 
 <h2 class="mb-4">🎓 Student Dashboard</h2>
 
+<!-- 🔹 PROFILE CARD -->
+<div class="card shadow-sm border-0 p-4 mb-4"
+     style="border-radius:20px;
+            background:linear-gradient(135deg,#ffffff,#f0f9ff);">
+
+<div class="d-flex justify-content-between align-items-center flex-wrap">
+
+<div>
+    <h4 class="fw-bold mb-1">
+        👋 Welcome, {{ student.name }}
+    </h4>
+
+    <p class="text-muted mb-1">
+        Username: {{ user.username }}
+    </p>
+
+    <p class="text-muted mb-1">
+        Email: {{ student.email }}
+    </p>
+
+    <p class="text-muted mb-0">
+        Work Experience:
+        {% if student.work_experience %}
+            {{ student.work_experience }}
+        {% else %}
+            Fresher
+        {% endif %}
+    </p>
+</div>
+
+<div class="mt-3 mt-md-0">
+    <a href="/students/edit-profile/"
+       class="btn btn-primary">
+       ✏ Edit Profile
+    </a>
+</div>
+
+</div>
+
+</div>
+
 <!-- 🔹 CARDS -->
 <div class="row text-center g-4">
 
 <div class="col-md-4">
-<div class="card p-4 shadow-sm" style="background:#fff7ed;">
+<div class="card p-4 shadow-sm dashboard-card"
+     style="background:#fff7ed;border-radius:18px;">
 <h6 class="text-muted">📄 Applications</h6>
 <h2>{{ total_apps|default:0 }}</h2>
 </div>
 </div>
 
 <div class="col-md-4">
-<div class="card p-4 shadow-sm" style="background:#ecfeff;">
+<div class="card p-4 shadow-sm dashboard-card"
+     style="background:#ecfeff;border-radius:18px;">
 <h6 class="text-muted">📊 CGPA</h6>
 <h2>{{ student.cgpa }}</h2>
 </div>
 </div>
 
 <div class="col-md-4">
-<div class="card p-4 shadow-sm" style="background:#f0fdf4;">
+<div class="card p-4 shadow-sm dashboard-card"
+     style="background:#f0fdf4;border-radius:18px;">
 <h6 class="text-muted">🏢 Eligible Companies</h6>
 <h2>{{ eligible_companies|default:0 }}</h2>
 </div>
@@ -31,26 +75,49 @@
 
 </div>
 
-<!-- 🔥 RESUME SECTION (NEW) -->
-<div class="card mt-4 p-4 shadow-sm">
+<!-- 🔥 RESUME SECTION -->
+<div class="card mt-4 p-4 shadow-sm border-0"
+     style="border-radius:20px;">
+
 <h5 class="mb-3">📄 My Resume</h5>
 
 {% if student.resume %}
-    <a href="{{ student.resume.url }}" target="_blank" class="btn btn-primary btn-sm">
+
+    <div class="d-flex gap-2 flex-wrap">
+
+    <a href="{{ student.resume.url }}"
+       target="_blank"
+       class="btn btn-primary btn-sm">
         👀 View Resume
     </a>
 
-    <a href="/students/delete-resume/" class="btn btn-danger btn-sm">
+    <a href="/students/delete-resume/"
+       class="btn btn-danger btn-sm">
         ❌ Delete
     </a>
+
+    </div>
+
 {% else %}
     <p class="text-muted">No resume uploaded</p>
 {% endif %}
 
-<form method="post" enctype="multipart/form-data" action="/students/upload-resume/" class="mt-3">
+<form method="post"
+      enctype="multipart/form-data"
+      action="/students/upload-resume/"
+      class="mt-3">
+
     {% csrf_token %}
-    <input type="file" name="resume" class="form-control mb-2" required>
-    <button class="btn btn-success btn-sm">⬆ Upload / Replace Resume</button>
+
+    <input type="file"
+           name="resume"
+           class="form-control mb-2"
+           required>
+
+    <button class="btn btn-success btn-sm">
+        ⬆ Upload / Replace Resume
+    </button>
+
 </form>
 
 </div>
@@ -67,21 +134,21 @@
 <div class="row mt-5 g-4">
 
 <div class="col-md-4">
-<div class="card p-3 shadow-sm">
+<div class="card p-3 shadow-sm border-0 chart-card">
 <h6 class="text-muted text-center">📊 Overview</h6>
 <canvas id="appChart"></canvas>
 </div>
 </div>
 
 <div class="col-md-4">
-<div class="card p-3 shadow-sm">
+<div class="card p-3 shadow-sm border-0 chart-card">
 <h6 class="text-muted text-center">📈 Performance</h6>
 <canvas id="barChart"></canvas>
 </div>
 </div>
 
 <div class="col-md-4">
-<div class="card p-3 shadow-sm">
+<div class="card p-3 shadow-sm border-0 chart-card">
 <h6 class="text-muted text-center">📉 Result</h6>
 <canvas id="resultChart"></canvas>
 </div>
@@ -90,10 +157,13 @@
 </div>
 
 <!-- 🔹 APPLICATION TABLE -->
-<div class="card mt-5 p-4 shadow-sm">
+<div class="card mt-5 p-4 shadow-sm border-0"
+     style="border-radius:20px;">
+
 <h5 class="mb-3">📄 My Applications</h5>
 
 <table class="table table-hover align-middle">
+
 <thead class="table-light">
 <tr>
 <th>Company</th>
@@ -102,47 +172,94 @@
 </thead>
 
 <tbody>
+
 {% for app in applications %}
 <tr>
-<td>{{ app.company.name }}</td>
 
 <td>
+    {{ app.company.name }}
+
+    {% if app.job %}
+    <br>
+    <small class="text-muted">
+        💼 {{ app.job.title }}
+    </small>
+    {% endif %}
+</td>
+
+<td>
+
 {% if app.status == "Selected" %}
 <span class="badge bg-success">Selected</span>
+
 {% elif app.status == "Rejected" %}
 <span class="badge bg-danger">Rejected</span>
+
 {% else %}
 <span class="badge bg-warning text-dark">Pending</span>
 {% endif %}
+
 </td>
 
 </tr>
+
 {% empty %}
+
 <tr>
-<td colspan="2" class="text-center text-muted">No applications yet</td>
+<td colspan="2"
+    class="text-center text-muted">
+    No applications yet
+</td>
 </tr>
+
 {% endfor %}
+
 </tbody>
 
 </table>
 
 </div>
 
-<!-- 🔔 NOTIFICATIONS (NEW) -->
-<div class="card mt-4 p-4 shadow-sm">
+<!-- 🔔 NOTIFICATIONS -->
+<div class="card mt-4 p-4 shadow-sm border-0"
+     style="border-radius:20px;">
+
 <h5 class="mb-3">🔔 Notifications</h5>
 
 {% for note in notes %}
-    <div class="alert alert-light border mb-2">
-        {{ note.message }}
-    </div>
+
+<div class="alert alert-light border notification-box">
+    {{ note.message }}
+</div>
+
 {% empty %}
-    <p class="text-muted">No notifications</p>
+
+<p class="text-muted">No notifications</p>
+
 {% endfor %}
 
 </div>
 
 </div>
+
+<!-- 🔥 STYLES -->
+<style>
+
+.dashboard-card,
+.chart-card,
+.notification-box {
+    transition: 0.3s;
+    border-radius: 18px;
+}
+
+.dashboard-card:hover,
+.chart-card:hover,
+.notification-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+</style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -155,7 +272,9 @@ const eligible = parseInt(dataDiv.dataset.eligible) || 0;
 const selected = parseInt(dataDiv.dataset.selected) || 0;
 const rejected = parseInt(dataDiv.dataset.rejected) || 0;
 
-const remaining = eligible - totalApps > 0 ? eligible - totalApps : 0;
+const remaining = eligible - totalApps > 0
+    ? eligible - totalApps
+    : 0;
 
 // Doughnut
 new Chart(document.getElementById('appChart'), {
@@ -179,7 +298,13 @@ new Chart(document.getElementById('barChart'), {
             backgroundColor: ['#ea580c', '#fb923c']
         }]
     },
-    options: { scales: { y: { beginAtZero: true } } }
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
 });
 
 // Result
