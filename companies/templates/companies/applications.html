@@ -39,20 +39,40 @@
 
     <td>
         {% if app.status == "Pending" %}
-            <a href="/companies/update-status/{{ app.id }}/Selected/" 
-               class="btn btn-success btn-sm">
-               Accept
-            </a>
 
-            <a href="/companies/update-status/{{ app.id }}/Rejected/" 
-               class="btn btn-danger btn-sm">
-               Reject
-            </a>
-        {% else %}
-            <button class="btn btn-secondary btn-sm" disabled>
-                Done
-            </button>
-        {% endif %}
+<a href="/companies/update-status/{{ app.id }}/Selected/"
+   class="btn btn-success btn-sm">
+   ✅ Select
+</a>
+
+<a href="/companies/update-status/{{ app.id }}/Rejected/"
+   class="btn btn-danger btn-sm">
+   ❌ Reject
+</a>
+
+{% elif app.status == "Selected" %}
+
+<button class="btn btn-success btn-sm disabled">
+    ✅ Selected
+</button>
+
+<a href="/companies/update-status/{{ app.id }}/Rejected/"
+   class="btn btn-danger btn-sm">
+   ❌ Reject
+</a>
+
+{% elif app.status == "Rejected" %}
+
+<a href="/companies/update-status/{{ app.id }}/Selected/"
+   class="btn btn-success btn-sm">
+   ✅ Select
+</a>
+
+<button class="btn btn-danger btn-sm disabled">
+    ❌ Rejected
+</button>
+
+{% endif %}
     </td>
 </tr>
 
